@@ -7,6 +7,7 @@ public class PlayerManager : MonoBehaviour
     public GameObject submarine;
     public GameObject player;
     public GameObject mainCamera;
+    public PlayerCameraController playerCameraController;
 
 
     private static PlayerManager instance;
