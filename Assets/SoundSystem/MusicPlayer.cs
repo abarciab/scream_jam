@@ -5,51 +5,83 @@ using UnityEngine;
 
 public class MusicPlayer : MonoBehaviour
 {
-    [SerializeField] Sound normalMusic, combatMusic, ambientWind;
-    bool fadingOut;
-    [SerializeField] bool muted, inCombat;
+    [SerializeField] List<Sound> tracks = new List<Sound>();
+    float timeLeft, waitTime;
+    [SerializeField] Vector2 silenceWaitRange = new Vector2(1, 10);
+    [SerializeField] Sound ambient;
+    Sound currentMusic;
+    int currentIndex;
+
+    [Header("combat music")]
+    [SerializeField] bool inCombat;
+    [SerializeField] Sound combatMusic;
 
     private void Start()
     {
-        normalMusic = Instantiate(normalMusic);
-        combatMusic = Instantiate(combatMusic);
-        ambientWind = Instantiate(ambientWind);
+        ambient = Instantiate(ambient);
+        ambient.Play();
 
-        normalMusic.Play();
-        ambientWind.Play();
+        for (int i = 0; i < tracks.Count; i++) {
+            tracks[i] = Instantiate(tracks[i]);
+        }
+        combatMusic = Instantiate(combatMusic);
         combatMusic.PlaySilent();
+        StartNext();
     }
 
-    public void FadeOut()
+    public void FadeOutCurrent(float time)
     {
-        combatMusic.PercentVolume(0, 0.05f);
-        normalMusic.PercentVolume(0, 0.05f);
-        ambientWind.PercentVolume(0, 0.05f);
-        fadingOut = true;
+        timeLeft = waitTime = Mathf.Infinity;
+        StartCoroutine(FadeOut(time));
+    }
+
+    IEnumerator FadeOut(float time)
+    {
+        float timePassed = 0;
+        while (timePassed < time) {
+            tracks[currentIndex].PercentVolume(Mathf.Lerp(1, 0, timePassed / time));
+            timePassed += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    void StartNext()
+    {
+        currentIndex = Random.Range(0, tracks.Count);
+        var selected = tracks[currentIndex];
+        selected.Play();
+        timeLeft = selected.GetClipLength();
+        waitTime = Mathf.Infinity;
+        currentMusic = selected;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M)) {
-            muted = !muted;
-        }
+        inCombat = EnvironmentManager.current.inCombat;
+        if (inCombat) PlayCombat();
+        else PlayNormal();
+    }
 
-        if (muted) {
-            normalMusic.PercentVolume(0);
-            combatMusic.PercentVolume(0);
-            ambientWind.PercentVolume(0);
-            return;
-        }
+    void PlayCombat()
+    {
+        currentMusic.PercentVolume(0, 0.1f);
+        combatMusic.PercentVolume(1, 0.1f);
+    }
 
-        if (fadingOut) return;
+    void PlayNormal()
+    {
+        currentMusic.PercentVolume(1, 0.05f);
+        combatMusic.PercentVolume(0, 0.1f);
 
-        if (inCombat) {
-            combatMusic.PercentVolume(1, 0.05f);
-            normalMusic.PercentVolume(0, 0.05f);
+        timeLeft -= Time.deltaTime;
+        if (timeLeft == Mathf.Infinity) waitTime -= Time.deltaTime;
+
+        if (timeLeft < 0) {
+            timeLeft = Mathf.Infinity;
+            waitTime = Random.Range(silenceWaitRange.x, silenceWaitRange.y);
         }
-        else {
-            combatMusic.PercentVolume(0, 0.05f);
-            normalMusic.PercentVolume(1, 0.05f);
+        if (waitTime <= 0) {
+            StartNext();
         }
     }
 }

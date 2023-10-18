@@ -10,11 +10,10 @@ public class AidanTest : MonoBehaviour
     void Update()
     {
         var moveDir = Vector3.zero;
-        if (Input.GetKey(KeyCode.W)) moveDir = transform.forward;
-        else if (Input.GetKey(KeyCode.S)) moveDir = transform.forward * -1;
-        if (Input.GetKey(KeyCode.D)) moveDir += transform.right;
-        else if (Input.GetKey(KeyCode.A)) moveDir += transform.right * -1;
-        if (Input.GetKey(KeyCode.Space)) moveDir += Vector3.up;
+        if (Input.GetKey(KeyCode.Space)) moveDir = transform.forward;
+        if (Input.GetKey(KeyCode.E)) moveDir += transform.right;
+        else if (Input.GetKey(KeyCode.Q)) moveDir += transform.right * -1;
+        if (Input.GetKey(KeyCode.F)) moveDir += Vector3.up;
         if (Input.GetKey(KeyCode.LeftShift)) moveDir += Vector3.down;
         moveDir = moveDir.normalized;
         moveDir *= moveSpeed * Time.deltaTime;
@@ -22,8 +21,10 @@ public class AidanTest : MonoBehaviour
         transform.position += Movedelta;
 
         var turnDir = Vector3.zero;
-        if (Input.GetKey(KeyCode.E)) turnDir = new Vector3(0, 1, 0);
-        if (Input.GetKey(KeyCode.Q)) turnDir = new Vector3(0, -1, 0);
+        if (Input.GetKey(KeyCode.W)) turnDir = new Vector3(-1, 0, 0);
+        if (Input.GetKey(KeyCode.A)) turnDir += new Vector3(0, -1, 0);
+        if (Input.GetKey(KeyCode.S)) turnDir += new Vector3(1, 0, 0);
+        if (Input.GetKey(KeyCode.D)) turnDir += new Vector3(0, 1, 0);
         turnDir *= turnSpeed * Time.deltaTime;
         turnDelta = Vector3.Lerp(turnDelta, turnDir, turnSmoothness);
         transform.localEulerAngles += turnDelta;

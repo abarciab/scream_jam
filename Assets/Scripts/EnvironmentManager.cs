@@ -5,11 +5,19 @@ using UnityEngine;
 public class EnvironmentManager : MonoBehaviour
 {
     public static EnvironmentManager current;
+    [SerializeField] float combatThreshold;
 
     private void Awake() { current = this; }
 
-    [SerializeField] List<Ruin> ruins = new List<Ruin>();
+    List<Ruin> ruins = new List<Ruin>();
+    List<Transform> monsters = new List<Transform>();
     public bool nextRuinAvaliable { get { return ruins.Count > 0; } }
+    public bool inCombat { get { return DistanceToMonster() < combatThreshold; } }
+
+    public void RegisterNewMonster(Transform monster)
+    {
+        monsters.Add(monster);
+    }
 
     public void RegisterNewRuin(Ruin newRuin)
     {
@@ -32,8 +40,24 @@ public class EnvironmentManager : MonoBehaviour
         return ruins.Count > 0 ? ruins[0].transform.position : Vector3.zero;
     }
 
+    float DistanceToMonster()
+    {
+        float closestDist = Mathf.Infinity;
+        foreach (var m in monsters) {
+            var dist = Vector3.Distance(Camera.main.transform.position, m.position);
+            if (dist < closestDist) closestDist = dist;
+        }
+        return closestDist;
+    }
+
     private void Update()
     {
         if (ruins.Count > 0) ruins[0].nextRuin = true;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(Camera.main.transform.position, combatThreshold);
     }
 }

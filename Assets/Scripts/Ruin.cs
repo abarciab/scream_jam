@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Ruin : MonoBehaviour
 {
+    [SerializeField] string displayName = "Ruin";
     [Min(1)] public int num;
     [SerializeField] float logReadRange = 4;
     [HideInInspector] public bool nextRuin;
@@ -12,7 +13,7 @@ public class Ruin : MonoBehaviour
 
     private void OnValidate()
     {
-        gameObject.name = "Ruin " + num;
+        gameObject.name = displayName + " (ruin " + num + ")";
     }
 
     void Start()

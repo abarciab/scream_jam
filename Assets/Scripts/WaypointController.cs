@@ -73,6 +73,9 @@ public class WaypointController : MonoBehaviour
 
     void DisplayOffScreenWaypoint(RectTransform wp, Vector2 oldPos)
     {
+        wp.gameObject.SetActive(false);
+        return;
+
         var pos = wp.anchoredPosition;
 
         float deltaX = Mathf.Abs(pos.x - wayPointAnchoredPositionLimits.x);
@@ -87,7 +90,7 @@ public class WaypointController : MonoBehaviour
         else {
             if (pos.y > 0) pos.y = -wayPointAnchoredPositionLimits.y;
             else pos.y = wayPointAnchoredPositionLimits.y;
-            pos.x *= -1;
+            //pos.x *= -1;
             pos.x = Mathf.Clamp(pos.x, -wayPointAnchoredPositionLimits.x, wayPointAnchoredPositionLimits.x);
         }
         
