@@ -9,20 +9,21 @@ public class PlayerCameraController : MonoBehaviour
 {
     public float mouseSensitivity = 100f;
     public CinemachineVirtualCamera playerVCam;
+    public bool locked { get { return _locked; } }
     float xRotation = 0f;
 
     [MyBox.ReadOnly]
     [SerializeField]
-    bool locked;
+    bool _locked;
 
     public void LockCamera()
     {
-        locked = true;
+        _locked = true;
     }
 
     public void UnlockCamera()
     {
-        locked = false;
+        _locked = false;
     }
 
     void Start()
@@ -33,7 +34,7 @@ public class PlayerCameraController : MonoBehaviour
 
     void Update()
     {
-        if (locked)
+        if (_locked)
         {
             return;
         }

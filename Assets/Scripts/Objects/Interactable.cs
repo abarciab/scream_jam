@@ -11,6 +11,7 @@ public class Interactable : MonoBehaviour
     [Tooltip("Lock the camera and change to vcam")]
     public bool doLockState;
 
+
     [ConditionalField(nameof(doLockState))]
     public CinemachineVirtualCamera vCam;
 
@@ -22,8 +23,10 @@ public class Interactable : MonoBehaviour
     public UnityEvent OnLockStateExit;
 
 
+    public bool inLockState { get { return _inLockState; } }
+
     [ReadOnly]
-    bool inLockState;
+    bool _inLockState;
 
     public void Interact()
     {
@@ -53,7 +56,7 @@ public class Interactable : MonoBehaviour
 
     void EnterLockState()
     {
-        inLockState = true;
+        _inLockState = true;
         PlayerManager.Instance.playerCameraController.playerVCam.Priority = 0;
         PlayerManager.Instance.playerCameraController.LockCamera();
         vCam.Priority = 100;
@@ -62,7 +65,7 @@ public class Interactable : MonoBehaviour
 
     void ExitLockState()
     {
-        inLockState = false;
+        _inLockState = false;
         PlayerManager.Instance.playerCameraController.playerVCam.Priority = 100;
         PlayerManager.Instance.playerCameraController.UnlockCamera();
         vCam.Priority = 0;
