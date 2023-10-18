@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dabeb3d63c6a614419ab2970049728a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  yawSpeed: 5
+  yawSpeed: 10
   pitchSpeed: 10
   propelForwardSpeed: 0.25
   propelBackwardSpeed: 0.21
