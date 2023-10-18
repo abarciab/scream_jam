@@ -64,13 +64,14 @@ public class SubmarineMovement : MonoBehaviour
             Propel(verticalInput);
         }
 
-        //We can only rotate if we are moving
+        //We can only yaw if we are moving
         if (horizontalInput != 0 && rb.velocity.magnitude > 0)
         {
             Yaw(horizontalInput);
         }
 
-        if (spaceInput || crlInput)
+        //We can only pitch if we are moving
+        if ((spaceInput || crlInput) && rb.velocity.magnitude > 0)
         {
             Pitch(crlInput ? 1 : -1);
         }
