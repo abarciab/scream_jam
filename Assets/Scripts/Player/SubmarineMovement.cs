@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
 using UnityEditor.Experimental.GraphView;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 
 [RequireComponent(typeof(Rigidbody))]
@@ -19,7 +20,7 @@ public class SubmarineMovement : MonoBehaviour
     public Action<float> OnPitching;
     #endregion
 
-
+    public bool active;
     public float yawSpeed;
     public float pitchSpeed;
     public float propelForwardSpeed;
@@ -42,13 +43,30 @@ public class SubmarineMovement : MonoBehaviour
     #endregion
 
 
+    //Called by a unity event
+    public void Activate()
+    {
+        active = true;
+    }
+
+    //Called by a unity event
+    public void Deactivate()
+    {
+        active = false;
+    }
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        active = false;
     }
 
     void Update()
     {
+        if (!active)
+        {
+            return;
+        }
         #region Input
 
         //Note: Temp Code

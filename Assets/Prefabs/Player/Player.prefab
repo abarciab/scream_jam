@@ -50,7 +50,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 10
+  m_Priority: 100
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
@@ -93,6 +93,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSensitivity: 100
+  playerVCam: {fileID: 4129672143791652037}
+  locked: 0
 --- !u!1 &5317814459338399978
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,6 +199,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3874244759520362273}
+  - component: {fileID: 8209075401495360407}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -221,6 +224,19 @@ Transform:
   - {fileID: 3717010033816466411}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8209075401495360407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5416004788246410116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5387be5608199f546981b4a266bd0060, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCamera: {fileID: 1140546015000800414}
 --- !u!1001 &4015598322876960978
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -282,6 +298,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4be95fc9aed0ce249867dee1c3148718, type: 3}
+--- !u!20 &1140546015000800414 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 4066273176175279180, guid: 4be95fc9aed0ce249867dee1c3148718, type: 3}
+  m_PrefabInstance: {fileID: 4015598322876960978}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5948143155718845051 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7293097775660966569, guid: 4be95fc9aed0ce249867dee1c3148718, type: 3}
