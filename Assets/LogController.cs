@@ -9,6 +9,7 @@ public class LogController : MonoBehaviour
     [SerializeField] GameObject readLogButton, logParent;
     [SerializeField] TextMeshProUGUI logMainText;
     [SerializeField] ScrollRect scrollRect;
+    public bool logActive { get { return logParent.activeInHierarchy; } }
     public void DisplayReadLogButtion(bool active)
     {
         readLogButton.SetActive(active);

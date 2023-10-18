@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour
 
     public void DisplayReadLogButtion(bool active)
     {
-        wpController.hideNextRuin = active;
+        wpController.hideNextRuin = active || logController.logActive;
         logController.DisplayReadLogButtion(active);
     }
 
