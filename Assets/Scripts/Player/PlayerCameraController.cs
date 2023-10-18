@@ -3,19 +3,28 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 using MyBox;
+using Cinemachine;
 
 public class PlayerCameraController : MonoBehaviour
 {
     public float mouseSensitivity = 100f;
-    float xRotation = 0f;
+    public CinemachineVirtualCamera playerVCam;
+    public bool locked { get { return _locked; } }
+
+    [SerializeField] Vector2 freeLookLimits;
 
     [MyBox.ReadOnly]
     [SerializeField]
-    bool locked;
+    bool _locked;
 
     public void LockCamera()
     {
-        locked = true;
+        _locked = true;
+    }
+
+    public void UnlockCamera()
+    {
+        _locked = false;
     }
 
     void Start()
@@ -24,22 +33,19 @@ public class PlayerCameraController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    void Update()
+    void LateUpdate()
     {
-        if (locked)
-        {
-            return;
-        }
-        // Get mouse input
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        if (_locked) return;
 
-        // Calculate the rotation for the camera vertically
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        float deltaY = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float deltaX = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        // Apply the rotation to the camera
-        transform.localRotation = Quaternion.Euler(xRotation, mouseX, 0f);
-        transform.parent.Rotate(Vector3.up * mouseX);
+        var eulers = transform.localEulerAngles + new Vector3(-deltaX, deltaY, 0f);
+        if (eulers.y > 180) eulers.y -= 360;
+        if (eulers.x > 180) eulers.x -= 360;
+        eulers.x = Mathf.Clamp(eulers.x, -freeLookLimits.x, freeLookLimits.x);
+        eulers.y = Mathf.Clamp(eulers.y, -freeLookLimits.y, freeLookLimits.y);
+
+        transform.localEulerAngles = eulers;
     }
 }
