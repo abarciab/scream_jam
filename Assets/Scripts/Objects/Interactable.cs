@@ -31,6 +31,8 @@ public class Interactable : MonoBehaviour
     [SerializeField] Material normalMat, HoverMat;
     bool activated;
 
+    [Header("Sounds")]
+    [SerializeField] Sound errorSound;
 
     public bool inLockState { get { return _inLockState; } }
 
@@ -39,6 +41,7 @@ public class Interactable : MonoBehaviour
 
     private void Start()
     {
+        if (errorSound && !errorSound.instantialized) errorSound = Instantiate(errorSound);
         OnMouseExit();
     }
 
@@ -63,6 +66,14 @@ public class Interactable : MonoBehaviour
 
     public void Interact()
     {
+        if (!enabled) {
+            if (errorSound) {
+                if (!errorSound.instantialized) errorSound = Instantiate(errorSound);
+                errorSound.Play(transform);
+            }
+            return;
+        }
+
         activated = !activated;
         if (activated && dontHoverWhenActive) ChangeColor(normalMat);
         if (inLockState) return;

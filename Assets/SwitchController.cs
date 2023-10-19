@@ -72,7 +72,7 @@ public class SwitchController : MonoBehaviour
             timePassed += Time.deltaTime;
             yield return new WaitForEndOfFrame();
             float progress = curve.Evaluate(timePassed / animateTime);
-            transform.rotation = Quaternion.Lerp(startRot, endRot, progress);
+            transform.localRotation = Quaternion.Lerp(startRot, endRot, progress);
             transform.localPosition = Vector3.Lerp(startPos, endPos, progress);
         }
         transform.localPosition = endPos;

@@ -5,3 +5,8 @@ CD_PLENITUDE_003.wav -- kevp888
 Lost In The Dream.mp3 -- SoundFlakes
 Horror Inspect Sound, UI, or In-Game Notification 01.wav -- MATRIXXX_
 Button Switch, Off.wav -- MATRIXXX_
+Sonar sweep beep -- SamsterBirdies
+Car Engine, Exterior, A.wav -- InspectorJ
+submarine prop whooshing -- rexen_devar
+Error_03.wav -- distilleryst...
+Breaker-1.wav -- Deathscyp

@@ -5,7 +5,7 @@ using UnityEngine;
 using MyBox;
 using UnityEditor.Experimental.GraphView;
 using System.Runtime.InteropServices.WindowsRuntime;
-
+using UnityEditor;
 
 [RequireComponent(typeof(Rigidbody))]
 public class SubmarineMovement : MonoBehaviour
@@ -32,16 +32,16 @@ public class SubmarineMovement : MonoBehaviour
     public AnimationCurve pitchGrowthSpeed;
 
     float normToMax;
+    float timeSpentHoldingYawControls, timeSpentHoldingPitchControls;
+    [SerializeField] float timeToFullPitchAndYaw = 1;
+
+    [Header("Sounds")]
+    [SerializeField] Sound engineSound;
+    [SerializeField] Sound propSound;
+    [SerializeField] float engineToggleTime = 2;
+    public bool engineOn;
+   
     Rigidbody rb;
-
-    #region Debug
-    [Header("Debug")]
-
-    [ReadOnly]
-    [SerializeField]
-    float velocityMagnitude;
-    #endregion
-
 
     //Called by a unity event
     public void Activate()
@@ -61,49 +61,59 @@ public class SubmarineMovement : MonoBehaviour
         active = false;
     }
 
+    private void Start()
+    {
+        propSound = Instantiate(propSound);
+        propSound.PlaySilent();
+        engineSound = Instantiate(engineSound);
+        engineSound.PlaySilent();
+        if (engineOn) TurnOnEngine();
+    }
+
+    public void TurnOffEngine()
+    {
+        StartCoroutine(SetEngine(false));
+    }
+
+    public void TurnOnEngine()
+    {
+        StartCoroutine(SetEngine(true));
+    }
+
+    IEnumerator SetEngine(bool active)
+    {
+        float target = active ? 1 : 0;
+        float start = active ? 0 : 1;
+        float timePassed = 0;
+        while (timePassed < engineToggleTime) {
+            engineSound.PercentVolume(Mathf.Lerp(start, target, timePassed / engineToggleTime));
+            yield return new WaitForEndOfFrame();
+            timePassed += Time.deltaTime;
+        }
+        engineSound.PercentVolume(target);
+        engineOn = active;
+    }
+
     void Update()
     {
-        if (!active)
+        if (!active || !engineOn)
         {
             return;
         }
-        #region Input
 
-        //Note: Temp Code
-        float verticalInput = Input.GetAxis("Vertical");
-        float horizontalInput = Input.GetAxis("Horizontal");
+        Propel(Input.GetAxis("Vertical"));
+        Yaw(Input.GetAxis("Horizontal"));
 
-        bool spaceInput = Input.GetButton("Jump");
-        bool crlInput = Input.GetKey(KeyCode.LeftShift);
-        //
-
-        if (verticalInput != 0)
-        {
-            Propel(verticalInput);
-        }
-
-        //We can only yaw if we are moving
-        if (horizontalInput != 0 && rb.velocity.magnitude > 0)
-        {
-            Yaw(horizontalInput);
-        }
-
-        //We can only pitch if we are moving
-        if ((spaceInput || crlInput) && rb.velocity.magnitude > 0)
-        {
-            Pitch(crlInput ? 1 : -1);
-        }
-        #endregion
-
-
-        #region Debug
-        velocityMagnitude = rb.velocity.magnitude;
-        #endregion
+        if (Input.GetButton("Jump")) Pitch(-1);
+        else if (Input.GetKey(KeyCode.LeftShift)) Pitch(1);
+        else timeSpentHoldingPitchControls = 0;
+        
     }
 
     private void FixedUpdate()
     {
         normToMax = rb.velocity.magnitude / maxVelocityMagnitude;
+        propSound.PercentVolume(normToMax);
 
         // Cap velocity if it exceeds the maximum velocity magnitude
         if (rb.velocity.magnitude > maxVelocityMagnitude)
@@ -133,25 +143,32 @@ public class SubmarineMovement : MonoBehaviour
 
     void Yaw(float direction)
     {
-        Quaternion deltaRotation = Quaternion.Euler(0f, direction *
-                                                        (yawGrowthSpeed.Evaluate(normToMax) * yawSpeed)
-                                                        * Time.deltaTime, 0f);
+        if (direction == 0) {
+            timeSpentHoldingYawControls = 0;
+            return;
+        }
+
+        timeSpentHoldingYawControls += Time.deltaTime;
+        float progress = timeSpentHoldingYawControls / timeToFullPitchAndYaw;
+        progress = Mathf.Clamp01(progress);
+
+        float yRot = direction * (yawGrowthSpeed.Evaluate(progress) * yawSpeed) * Time.deltaTime;
+        Quaternion deltaRotation = Quaternion.Euler(0f, yRot, 0f);
         rb.MoveRotation(rb.rotation * deltaRotation);
         OnYawing?.Invoke(direction);
     }
 
     void Pitch(float direction)
     {
-        Quaternion deltaRotation = Quaternion.Euler(direction *
-                                                        (pitchGrowthSpeed.Evaluate(normToMax) * pitchSpeed)
-                                                        * Time.deltaTime, 0f, 0f);
+        timeSpentHoldingPitchControls += Time.deltaTime;
+        float progress = timeSpentHoldingPitchControls / timeToFullPitchAndYaw;
+        progress = Mathf.Clamp01(progress);
 
+        float xRot = direction * (pitchGrowthSpeed.Evaluate(progress) * pitchSpeed) * Time.deltaTime;
+        Quaternion deltaRotation = Quaternion.Euler(xRot, 0f, 0f);
         float deltaAngle = Mathf.DeltaAngle(deltaRotation.eulerAngles.x, 0);
-        if (Mathf.Abs(deltaAngle) > maxPitchAngle)
-        {
-            return;
-        }
-
+        
+        if (Mathf.Abs(deltaAngle) > maxPitchAngle) return;
         rb.MoveRotation(rb.rotation * deltaRotation);
         OnPitching?.Invoke(direction);
     }

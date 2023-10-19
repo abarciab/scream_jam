@@ -10,7 +10,7 @@ public class EnvironmentManager : MonoBehaviour
     private void Awake() { current = this; }
 
     List<Ruin> ruins = new List<Ruin>();
-    List<Transform> monsters = new List<Transform>();
+    [HideInInspector]public List<Transform> monsters = new List<Transform>();
     public bool nextRuinAvaliable { get { return ruins.Count > 0; } }
     public bool inCombat { get { return DistanceToMonster() < combatThreshold; } }
 

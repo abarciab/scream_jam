@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class SharkController : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class SharkController : MonoBehaviour
     [SerializeField] float turnSmoothness = 0.05f;
     [SerializeField] float moveSpeed, targetThreshold = 1.5f;
     Vector3 currentTarget;
+
+    [Header("Aggro")]
+    [SerializeField] bool aggro;
 
     private void OnValidate()
     {
@@ -65,18 +69,29 @@ public class SharkController : MonoBehaviour
 
     private void Update()
     {
-        if (patrolling) GoToNextPoint();
+        if (aggro) ChasePlayer();
+        else if (patrolling) GoToNextPoint();
+
+        GoToCurrentTarget();
+    }
+
+    void ChasePlayer()
+    {
+        currentTarget = PlayerManager.Instance.submarine.transform.position;
     }
 
     void GoToNextPoint()
+    {
+        float dist = Vector3.Distance(transform.position, currentTarget);
+        if (dist < targetThreshold) NextPoint();
+    }
+
+    void GoToCurrentTarget()
     {
         var rot = transform.rotation;
         transform.LookAt(currentTarget);
         transform.rotation = Quaternion.Lerp(rot, transform.rotation, turnSmoothness);
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
-
-        float dist = Vector3.Distance(transform.position, currentTarget);
-        if (dist < targetThreshold) NextPoint();
     }
 
     private void OnDrawGizmos()
