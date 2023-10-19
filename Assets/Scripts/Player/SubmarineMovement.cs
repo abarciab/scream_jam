@@ -3,9 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
-using UnityEditor.Experimental.GraphView;
-using System.Runtime.InteropServices.WindowsRuntime;
-
 
 [RequireComponent(typeof(Rigidbody))]
 public class SubmarineMovement : MonoBehaviour
@@ -22,15 +19,21 @@ public class SubmarineMovement : MonoBehaviour
 
     public bool active;
     public float yawSpeed;
-    public float pitchSpeed;
+    public float pitchTime;
     public float propelForwardSpeed;
     public float propelBackwardSpeed;
     public float maxVelocityMagnitude;
     [Range(0, 90)]
     public float maxPitchAngle;
     public AnimationCurve yawGrowthSpeed;
-    public AnimationCurve pitchGrowthSpeed;
+    public AnimationCurve pitchCurve;
+    public AnimationCurve dampenCurve;
 
+    bool isPitching = false;
+    float forwardAndBackInput;
+    float yawInput;
+    bool pitchDownInput;
+    bool pitchUpInput;
     float normToMax;
     Rigidbody rb;
 
@@ -70,28 +73,28 @@ public class SubmarineMovement : MonoBehaviour
         #region Input
 
         //Note: Temp Code
-        float verticalInput = Input.GetAxis("Vertical");
-        float horizontalInput = Input.GetAxis("Horizontal");
+        forwardAndBackInput = Input.GetAxis("Vertical");
+        yawInput = Input.GetAxis("Horizontal");
 
-        bool spaceInput = Input.GetButton("Jump");
-        bool crlInput = Input.GetKey(KeyCode.LeftShift);
+        pitchDownInput = Input.GetKey(KeyCode.LeftShift);
+        pitchUpInput = Input.GetButton("Jump");
         //
 
-        if (verticalInput != 0)
+        if (forwardAndBackInput != 0)
         {
-            Propel(verticalInput);
+            Propel(forwardAndBackInput);
         }
 
         //We can only yaw if we are moving
-        if (horizontalInput != 0 && rb.velocity.magnitude > 0)
+        if (yawInput != 0 && rb.velocity.magnitude > 0)
         {
-            Yaw(horizontalInput);
+            Yaw(yawInput);
         }
 
         //We can only pitch if we are moving
-        if ((spaceInput || crlInput) && rb.velocity.magnitude > 0)
+        if (isPitchingInput() && rb.velocity.magnitude > 0 && !isPitching)
         {
-            Pitch(crlInput ? 1 : -1);
+            StartCoroutine(Pitch(pitchUpInput ? -1 : 1));
         }
         #endregion
 
@@ -100,6 +103,8 @@ public class SubmarineMovement : MonoBehaviour
         velocityMagnitude = rb.velocity.magnitude;
         #endregion
     }
+
+
 
     private void FixedUpdate()
     {
@@ -119,8 +124,6 @@ public class SubmarineMovement : MonoBehaviour
             float cappedRotationX = Mathf.Sign(deltaAngle) * maxPitchAngle;
             transform.rotation = Quaternion.Euler(-cappedRotationX, currentRotation.y, currentRotation.z);
         }
-
-
     }
 
     void Propel(float direction)
@@ -137,23 +140,58 @@ public class SubmarineMovement : MonoBehaviour
                                                         (yawGrowthSpeed.Evaluate(normToMax) * yawSpeed)
                                                         * Time.deltaTime, 0f);
         rb.MoveRotation(rb.rotation * deltaRotation);
+        print("yawwwww");
         OnYawing?.Invoke(direction);
     }
 
-    void Pitch(float direction)
+    IEnumerator Pitch(float direction)
     {
-        Quaternion deltaRotation = Quaternion.Euler(direction *
-                                                        (pitchGrowthSpeed.Evaluate(normToMax) * pitchSpeed)
-                                                        * Time.deltaTime, 0f, 0f);
+        isPitching = true;
+        float normTime = 0;
+        Quaternion startingRot = transform.rotation;
+        Quaternion endRot = transform.rotation;
+        endRot.eulerAngles = new Vector3(maxPitchAngle * direction, startingRot.eulerAngles.y, startingRot.eulerAngles.z);
 
-        float deltaAngle = Mathf.DeltaAngle(deltaRotation.eulerAngles.x, 0);
-        if (Mathf.Abs(deltaAngle) > maxPitchAngle)
+        while (normTime < 1.0f && isPitchingInput() && rb.velocity.magnitude > 0)
         {
-            return;
+            rb.MoveRotation(Quaternion.Lerp(startingRot, endRot, pitchCurve.Evaluate(normTime)));
+
+            OnPitching?.Invoke(direction);
+            normTime += Time.deltaTime / pitchTime;
+            yield return null;
         }
 
-        rb.MoveRotation(rb.rotation * deltaRotation);
-        OnPitching?.Invoke(direction);
+
+        if (normTime < 1.0f)
+        {
+            float dampenDegree = 4f * normTime;
+            float dampenTime = 1f * normTime;
+
+            normTime = 0;
+
+            startingRot = transform.rotation;
+            transform.Rotate(new Vector3(dampenDegree * direction, 0, 0));
+            endRot = transform.rotation;
+            transform.rotation = startingRot;
+            //go up 1 degree
+            while (normTime < 1.0f)
+            {
+                OnPitching?.Invoke(direction);
+                rb.MoveRotation(Quaternion.Lerp(startingRot, endRot, dampenCurve.Evaluate(normTime)));
+                normTime += Time.deltaTime / dampenTime;
+                yield return null;
+            }
+
+        }
+
+        isPitching = false;
     }
+
+    #region Utils
+    bool isPitchingInput()
+    {
+        return pitchDownInput != pitchUpInput;
+    }
+    #endregion
 
 }
