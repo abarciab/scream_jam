@@ -74,7 +74,7 @@ public class SubmarineMovement : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
 
         bool spaceInput = Input.GetButton("Jump");
-        bool crlInput = Input.GetKey(KeyCode.LeftControl);
+        bool crlInput = Input.GetKey(KeyCode.LeftShift);
         //
 
         if (verticalInput != 0)

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using MyBox;
 using Cinemachine;
-
+using UnityEngine.UIElements;
 
 public class Interactable : MonoBehaviour
 {
@@ -16,11 +16,20 @@ public class Interactable : MonoBehaviour
     public CinemachineVirtualCamera vCam;
 
     public UnityEvent OnInteract;
+    public UnityEvent OnHover;
+    public UnityEvent OnHoverExit;
 
     [ConditionalField(nameof(doLockState))]
     public UnityEvent OnLockStateEnter;
     [ConditionalField(nameof(doLockState))]
     public UnityEvent OnLockStateExit;
+
+    [Header("Color changeOnHover")]
+    [SerializeField] bool changeColorOnHover = true;
+    [SerializeField] bool dontHoverWhenActive;
+    [SerializeField] List<Renderer> renderers = new List<Renderer>();
+    [SerializeField] Material normalMat, HoverMat;
+    bool activated;
 
 
     public bool inLockState { get { return _inLockState; } }
@@ -28,12 +37,35 @@ public class Interactable : MonoBehaviour
     [ReadOnly]
     bool _inLockState;
 
+    private void Start()
+    {
+        OnMouseExit();
+    }
+
+    private void OnMouseExit()
+    {
+        OnHover.Invoke();
+        if (!changeColorOnHover) return;
+        ChangeColor(normalMat);
+    }
+
+    private void OnMouseEnter()
+    {
+        OnHover.Invoke();
+        if (!changeColorOnHover || dontHoverWhenActive && activated) return;
+        ChangeColor(HoverMat);
+    }
+
+    void ChangeColor(Material mat)
+    {
+        foreach (var r in renderers) r.material = mat;
+    }
+
     public void Interact()
     {
-        if (inLockState)
-        {
-            return;
-        }
+        activated = !activated;
+        if (activated && dontHoverWhenActive) ChangeColor(normalMat);
+        if (inLockState) return;
 
         if (doLockState)
         {
@@ -61,6 +93,7 @@ public class Interactable : MonoBehaviour
         PlayerManager.Instance.playerCameraController.LockCamera();
         vCam.Priority = 100;
         OnLockStateEnter.Invoke();
+        activated = true;
     }
 
     void ExitLockState()
@@ -70,6 +103,6 @@ public class Interactable : MonoBehaviour
         PlayerManager.Instance.playerCameraController.UnlockCamera();
         vCam.Priority = 0;
         OnLockStateExit.Invoke();
-
+        activated = false;
     }
 }

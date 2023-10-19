@@ -4,20 +4,13 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    private static PlayerManager instance;
+    public static PlayerManager Instance { get { return instance; } }
+
     public GameObject submarine;
     public GameObject player;
     public GameObject mainCamera;
     public PlayerCameraController playerCameraController;
-
-
-    private static PlayerManager instance;
-    public static PlayerManager Instance
-    {
-        get
-        {
-            return instance;
-        }
-    }
 
     void Awake()
     {
