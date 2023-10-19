@@ -142,17 +142,21 @@ public class SubmarineMovement : MonoBehaviour
 
     void Pitch(float direction)
     {
-        Quaternion deltaRotation = Quaternion.Euler(direction *
-                                                        (pitchGrowthSpeed.Evaluate(normToMax) * pitchSpeed)
-                                                        * Time.deltaTime, 0f, 0f);
+        // Quaternion deltaRotation = Quaternion.Euler(direction *
+        //                                                 (pitchGrowthSpeed.Evaluate(normToMax) * pitchSpeed)
+        //                                                 * Time.deltaTime, 0f, 0f);
 
-        float deltaAngle = Mathf.DeltaAngle(deltaRotation.eulerAngles.x, 0);
-        if (Mathf.Abs(deltaAngle) > maxPitchAngle)
-        {
-            return;
-        }
 
-        rb.MoveRotation(rb.rotation * deltaRotation);
+        // float deltaAngle = Mathf.DeltaAngle(deltaRotation.eulerAngles.x, 0);
+        //NOTE: BORKEN :( direction becomes messy as you rotate around with Yaw
+        rb.AddRelativeTorque(new Vector3(direction * pitchGrowthSpeed.Evaluate(normToMax) * pitchSpeed * Time.deltaTime, 0, 0));
+        print(direction * pitchGrowthSpeed.Evaluate(normToMax) * pitchSpeed);
+        // if (Mathf.Abs(deltaAngle) > maxPitchAngle)
+        // {
+        //     return;
+        // }
+
+        // rb.MoveRotation(rb.rotation * deltaRotation);
         OnPitching?.Invoke(direction);
     }
 
