@@ -27,12 +27,6 @@ public class PlayerCameraController : MonoBehaviour
         _locked = false;
     }
 
-    void Start()
-    {
-        // Hide and lock the cursor
-        Cursor.lockState = CursorLockMode.Locked;
-    }
-
     void LateUpdate()
     {
         if (_locked) return;

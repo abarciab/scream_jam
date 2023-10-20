@@ -20,6 +20,7 @@ public class LogController : MonoBehaviour
         scrollRect.verticalNormalizedPosition = 1;
         logMainText.text = text;
         logParent.SetActive(true);
+        GameManager.i.LockCursor(false);
     }
 
     public void NextRuin()
@@ -30,5 +31,6 @@ public class LogController : MonoBehaviour
     void HideLog()
     {
         logParent.SetActive(false);
+        GameManager.i.LockCursor(true);
     }
 }

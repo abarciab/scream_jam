@@ -100,8 +100,8 @@ public class Interactable : MonoBehaviour
     void EnterLockState()
     {
         _inLockState = true;
-        PlayerManager.Instance.playerCameraController.playerVCam.Priority = 0;
-        PlayerManager.Instance.playerCameraController.LockCamera();
+        PlayerManager.i.playerCameraController.playerVCam.Priority = 0;
+        PlayerManager.i.playerCameraController.LockCamera();
         vCam.Priority = 100;
         OnLockStateEnter.Invoke();
         activated = true;
@@ -110,8 +110,8 @@ public class Interactable : MonoBehaviour
     void ExitLockState()
     {
         _inLockState = false;
-        PlayerManager.Instance.playerCameraController.playerVCam.Priority = 100;
-        PlayerManager.Instance.playerCameraController.UnlockCamera();
+        PlayerManager.i.playerCameraController.playerVCam.Priority = 100;
+        PlayerManager.i.playerCameraController.UnlockCamera();
         vCam.Priority = 0;
         OnLockStateExit.Invoke();
         activated = false;

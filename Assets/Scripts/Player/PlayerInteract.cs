@@ -10,7 +10,7 @@ public class PlayerInteract : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PlayerManager.Instance.playerCameraController.locked)
+        if (PlayerManager.i.playerCameraController.locked)
         {
             return;
         }

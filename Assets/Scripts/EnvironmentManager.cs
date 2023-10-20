@@ -12,11 +12,20 @@ public class EnvironmentManager : MonoBehaviour
     List<Ruin> ruins = new List<Ruin>();
     [HideInInspector]public List<Transform> monsters = new List<Transform>();
     public bool nextRuinAvaliable { get { return ruins.Count > 0; } }
-    public bool inCombat { get { return DistanceToMonster() < combatThreshold; } }
+    public bool inCombat { get { return NumAggroMonsters() > 0; } }
 
     public void RegisterNewMonster(Transform monster)
     {
         monsters.Add(monster);
+    }
+
+    int NumAggroMonsters()
+    {
+        int num = 0;
+        foreach (var m in monsters) {
+            if (m.GetComponent<Enemy>().aggro) num += 1;
+        }
+        return num;
     }
 
     public void RegisterNewRuin(Ruin newRuin)
@@ -43,9 +52,13 @@ public class EnvironmentManager : MonoBehaviour
     float DistanceToMonster()
     {
         float closestDist = Mathf.Infinity;
+        var closestMonster = transform;
         foreach (var m in monsters) {
             var dist = Vector3.Distance(Camera.main.transform.position, m.position);
-            if (dist < closestDist) closestDist = dist;
+            if (dist < closestDist) {
+                closestDist = dist;
+                closestMonster = m;
+            }
         }
         return closestDist;
     }
