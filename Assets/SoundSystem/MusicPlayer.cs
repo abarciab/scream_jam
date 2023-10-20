@@ -17,12 +17,15 @@ public class MusicPlayer : MonoBehaviour
     [SerializeField] Sound combatMusic;
 
     [Header("Alert")]
+    [SerializeField] Sound alertHeartbeat; 
     [SerializeField] float alertVolPercent; 
 
     private void Start()
     {
         ambient = Instantiate(ambient);
+        alertHeartbeat = Instantiate(alertHeartbeat);
         ambient.Play();
+        alertHeartbeat.PlaySilent();
 
         for (int i = 0; i < tracks.Count; i++) {
             tracks[i] = Instantiate(tracks[i]);
@@ -60,9 +63,12 @@ public class MusicPlayer : MonoBehaviour
 
     private void Update()
     {
+        bool alert = EnvironmentManager.current.numAlertMonsters > 0;
+        alertHeartbeat.PercentVolume(alert ? 1 : 0, 0.01f);
+
         inCombat = EnvironmentManager.current.inCombat;
         if (inCombat) PlayCombat();
-        else PlayNormal();
+        else PlayNormal(alert);
     }
 
     void PlayCombat()
@@ -71,10 +77,9 @@ public class MusicPlayer : MonoBehaviour
         combatMusic.PercentVolume(1, 0.1f);
     }
 
-    void PlayNormal()
+    void PlayNormal(bool alert)
     {
-        float targetVol = EnvironmentManager.current.numAlertMonsters > 0 ? alertVolPercent : 1;
-        currentMusic.PercentVolume(targetVol, 0.05f);
+        currentMusic.PercentVolume(alert ? alertVolPercent : 1, 0.05f);
         combatMusic.PercentVolume(0, 0.1f);
 
         timeLeft -= Time.deltaTime;

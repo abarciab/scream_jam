@@ -8,9 +8,9 @@ public class WindowUI : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI depthText;
     [SerializeField] Transform wheelParent;
-    [SerializeField] GameObject depthParent, compassParent, throttleParent;
+    [SerializeField] GameObject depthParent, compassParent, throttleParent, restartParent;
     [SerializeField] bool showCompass;
-    [SerializeField] Slider healthSlider, throttleSlider;
+    [SerializeField] Slider healthSlider, throttleSlider, restartSlider;
     [SerializeField] GameObject poewrOffText;
     [SerializeField] SubmarineMovement moveScript;
     [SerializeField] Transform upArrow;
@@ -23,6 +23,10 @@ public class WindowUI : MonoBehaviour
         throttleParent.SetActive(engineOn);
         compassParent.SetActive(engineOn && showCompass);
         healthSlider.value = PlayerManager.i.player.healthPercent;
+
+        float waitTimeLeft = PlayerManager.i.player.getWaitTimeLeftPercent();
+        restartParent.SetActive(engineOn && waitTimeLeft > 0 && !PlayerManager.i.moveScript.enabled);
+        restartSlider.value = waitTimeLeft;
 
         float depth = GameManager.i.SeaLevel - transform.position.y;
         depthText.text = (Mathf.Round(depth * 10) / 10) + " m";

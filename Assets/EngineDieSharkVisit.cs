@@ -39,8 +39,9 @@ public class EngineDieSharkVisit : MonoBehaviour
         if (enemy.aggro && shark.scriptedBehavior) {
             StopAllCoroutines();
             shark.scriptedBehavior = false;
-            print("SHARK AGGRO!");
-            shark.fastTurn = false; 
+            shark.fastTurn = false;
+            shark.updateRotation = true;
+            shark.goToTarget = true;
         }
     }
 
@@ -60,7 +61,9 @@ public class EngineDieSharkVisit : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        shark.SetTarget(shark.transform.position);
+        shark.fastTurn = false;
+        shark.goToTarget = false;
+        shark.updateRotation = false;
 
         float timeLeft = sharkWaitTime;
         while (timeLeft > 0) {
@@ -68,7 +71,8 @@ public class EngineDieSharkVisit : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        shark.fastTurn = false;
+        shark.goToTarget = true;
+        shark.updateRotation = true;
         shark.SetTarget(sub.TransformPoint(sharkExitPos));
         while (!shark.atTarget) yield return new WaitForEndOfFrame();
         shark.scriptedBehavior = false;

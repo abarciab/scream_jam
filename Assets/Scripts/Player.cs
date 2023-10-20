@@ -13,9 +13,9 @@ public class Player : MonoBehaviour
     public List<Transform> enemiesInContact = new List<Transform>();
     SubmarineMovement moveScript;
     [SerializeField] float defaultDisableTime = 3;
+    float waitTimeLeft, currentDisableTime;
 
     [Header("Low Health")]
-    [SerializeField] Sound alarmSound;
     [SerializeField] Color lightAlarmColor;
     [SerializeField] Light interiorLight;
     Color originalLightColor;
@@ -25,12 +25,17 @@ public class Player : MonoBehaviour
     [SerializeField] Transform flareStartPos;
     [SerializeField] float flareSpeed;
 
+    [Header("Sounds")]
+    [SerializeField] Sound crashSound;
+    [SerializeField] Sound alarmSound;
+
     private void Start()
     {
         health = maxHealth;
         moveScript = GetComponent<SubmarineMovement>();
         originalLightColor = interiorLight.color;
         alarmSound = Instantiate(alarmSound);
+        crashSound = Instantiate(crashSound);
         alarmSound.PlaySilent();
     }
 
@@ -84,6 +89,10 @@ public class Player : MonoBehaviour
             health = 0;
             Die();
         }
+        if (damage <= 0) return;
+        
+        moveScript.Spin();
+        crashSound.Play();
     }
 
     public void PushSub(Vector3 force,float disableTime = -1)
@@ -96,8 +105,19 @@ public class Player : MonoBehaviour
 
     IEnumerator EnableMove(float time)
     {
-        yield return new WaitForSeconds(time);
+        currentDisableTime = time;
+        waitTimeLeft = time;
+        while (waitTimeLeft > 0) {
+            waitTimeLeft -= Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        waitTimeLeft = 0;
         moveScript.enabled = true;
+    }
+
+    public float getWaitTimeLeftPercent()
+    {
+        return currentDisableTime != 0 ? 1 - waitTimeLeft / currentDisableTime : 0;
     }
 
     void Die()

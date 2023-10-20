@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clips:
   - name: 
-    clip: {fileID: 8300000, guid: 1d55ba79c380e414aa6bc7278380ea23, type: 3}
+    clip: {fileID: 8300000, guid: a75484b08b104024eac2bb7f4313de7e, type: 3}
     looping: 1
     CustomPitchAndVolume: 0
     volume: 0
@@ -22,7 +22,7 @@ MonoBehaviour:
   type: 0
   SynchronizePitchAndVolume: 1
   pitch: 1.12
-  volume: 0.11
+  volume: 0.02
   voiceLines: 0
   audioSource: {fileID: 0}
   instantialized: 0

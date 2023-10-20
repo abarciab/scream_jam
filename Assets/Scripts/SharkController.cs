@@ -9,16 +9,16 @@ public class SharkController : MonoBehaviour
     [Header("Patrol")]
     [SerializeField] Transform patrolPointParent;
     List<Transform> patrolPoints = new List<Transform>();
-    [SerializeField] bool inOrder, loop = true, patrolOnStart = true;
+    [SerializeField] bool inOrder, loop = true, patrolOnStart = true, patrolWhenChill;
     int pointsLeft;
     bool patrolling;
     [SerializeField] bool debugPoints;
 
     [Header("Misc")]
     [SerializeField] float turnSmoothness = 0.05f;
-    [SerializeField] float moveSpeed, targetThreshold = 1.5f;
-    Vector3 currentTarget;
-    public bool scriptedBehavior;
+    [SerializeField] float moveSpeed, targetThreshold = 1.5f, moveSmoothness;
+    Vector3 currentTarget, posDelta;
+    public bool scriptedBehavior, updateRotation = true, goToTarget = true;
 
     [Header("Aggro")]
     [SerializeField] bool aggro;
@@ -33,9 +33,14 @@ public class SharkController : MonoBehaviour
     [SerializeField] Renderer bodyRenderer;
     [SerializeField] Material calmMat, aggroMat;
 
+    [Header("Anims")]
+    [SerializeField] Animator anim;
+    [SerializeField] string biteTrigger = "bite";
+
     Enemy enemyScript;
     public float distanceToTarget { get { return Vector3.Distance(transform.position, currentTarget); } }
-    public bool atTarget { get { return distanceToTarget < 1.5f; } }
+    bool liningUpFrontAttack { get { return aggro && frontAttack && attackCooldown <= 0 && !charging; } }
+    public bool atTarget { get { return distanceToTarget < 3f; } }
     [HideInInspector] public bool fastTurn;
 
     private void OnValidate()
@@ -94,13 +99,16 @@ public class SharkController : MonoBehaviour
     {
         var mat = aggro ? aggroMat : calmMat;
         foreach (var r in indicatorRenderers) r.material = mat;
-        bodyRenderer.materials[1] = mat;
+        var mats = bodyRenderer.materials;
+        mats[1] = mat;
+        bodyRenderer.materials = mats;
 
         if (enemyScript.aggro) aggro = true;
         if (scriptedBehavior) {
             GoToCurrentTarget();
             return;
         }
+        else if (!enemyScript.aggro && !enemyScript.alert && !patrolling) StartPatrol();
 
         attackCooldown -= Time.deltaTime;
         if (aggro) ChasePlayer();
@@ -130,11 +138,18 @@ public class SharkController : MonoBehaviour
         player.Damage(attackDamage);
         var dir = transform.position - player.transform.position;
         player.PushSub(dir * -chargeForce);
-        transform.position = player.transform.position -3 * backAwayDist * dir;
+        transform.position = player.transform.position + 3 * backAwayDist * dir;
         attackCooldown = attackResetTime;
         currentTarget = transform.position;
         charging = false;
 
+        CompleteAttack();
+    }
+
+    void CompleteAttack()
+    {
+        enemyScript.EnterCalm();
+        aggro = false;
         PickNewAttack();
     }
 
@@ -159,13 +174,13 @@ public class SharkController : MonoBehaviour
         attackCooldown = attackResetTime;
         currentTarget = transform.position;
 
-        PickNewAttack();
+        CompleteAttack();
     }
 
     void PickNewAttack()
     {
-        frontAttack = !frontAttack;
-        behindAttack = !behindAttack; 
+        frontAttack = true;
+        behindAttack = false;
     }
 
     void GoToNextPoint()
@@ -176,12 +191,23 @@ public class SharkController : MonoBehaviour
 
     void GoToCurrentTarget()
     {
-        if (atTarget) return;
-
+        var targetPos = Vector3.zero;
         var rot = transform.rotation;
-        transform.LookAt(currentTarget);
+
+        if (!atTarget) {
+            if (updateRotation) {
+                transform.LookAt(currentTarget);
+                if (liningUpFrontAttack) {
+                    var posDifference = currentTarget - transform.position;
+                    transform.LookAt(transform.position - posDifference);
+                }
+            }
+            if (goToTarget) targetPos = (charging ? chargeSpeed : moveSpeed) * (liningUpFrontAttack ? -1 : 1) * transform.forward;
+        }
+
         transform.rotation = Quaternion.Lerp(rot, transform.rotation, fastTurn ? 1 : turnSmoothness);
-        transform.position += transform.forward * (charging ? chargeSpeed : moveSpeed) * Time.deltaTime;
+        posDelta = Vector3.Lerp(posDelta, targetPos, moveSmoothness);
+        transform.position += posDelta * Time.deltaTime;
     }
 
     private void OnDrawGizmos()

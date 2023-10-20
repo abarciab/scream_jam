@@ -6,6 +6,7 @@ using MyBox;
 using UnityEditor.Experimental.GraphView;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEditor;
+using System.Data;
 
 [RequireComponent(typeof(Rigidbody))]
 public class SubmarineMovement : MonoBehaviour
@@ -21,16 +22,56 @@ public class SubmarineMovement : MonoBehaviour
     [Header("Sounds")]
     [SerializeField] Sound propSound;
 
-    [Header("test")]
-    [SerializeField] Vector3 testVector;
-    [SerializeField] float testTurnSpeed;
-   
+    [Header("spinning")]
+    [SerializeField] float spinTime;
+    [SerializeField] AnimationCurve spinXCurve, spinYCurve, spinZCurve;
+    [SerializeField] float spinSmoothTime = 2, spinSmoothness = 0.05f;
+    bool spinning;
+
     Rigidbody rb;
 
     public void Activate() { active = true; }
     public void Deactivate() { active = false; }
 
     public float totalThrottle { get { return Mathf.Abs(currentThrottle) - minThrottleSpeed; } }
+
+    [ButtonMethod]
+    public void Spin()
+    {
+        StartCoroutine(AnimateSpin());
+    }
+
+    IEnumerator AnimateSpin()
+    {
+        var startRot = transform.localEulerAngles;
+        var startQuat = transform.rotation;
+        spinning = true;
+        var deltaRot = Vector3.zero;
+        float timePassed = 0;
+        while (timePassed < spinTime) {
+            timePassed += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+
+            float progress = timePassed / spinTime;
+            var euler = Vector3.one * 360;
+            euler.x *= spinXCurve.Evaluate(progress);
+            euler.y *= spinYCurve.Evaluate(progress);
+            euler.z *= spinZCurve.Evaluate(progress);
+            deltaRot = Vector3.Lerp(deltaRot, euler, spinSmoothness);
+
+            transform.localEulerAngles = deltaRot + startRot;
+        }
+
+        timePassed = 0;
+        while (timePassed < spinSmoothTime) {
+            timePassed += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+            transform.localRotation = Quaternion.Lerp(transform.rotation, startQuat, spinSmoothness);
+        }
+
+        transform.rotation = startQuat;
+        spinning = false;
+    }
 
     void Awake()
     {
@@ -52,7 +93,7 @@ public class SubmarineMovement : MonoBehaviour
     void Update()
     {
         propSound.PercentVolume(Mathf.Abs(currentThrottle), 0.1f);
-        if (!PlayerManager.i.engineOn) {
+        if (!PlayerManager.i.engineOn || spinning) {
             currentThrottle = 0;
             return;
         }
