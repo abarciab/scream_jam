@@ -6,9 +6,8 @@ using UnityEngine;
 public class EngineDieSharkVisit : MonoBehaviour
 {
     [SerializeField] SharkController shark;
-    [SerializeField] Vector3 sharkSummonOffset, sharkTargetPos;
+    [SerializeField] Vector3 sharkSummonOffset, sharkTargetPos, sharkExitPos;
     [SerializeField] float sharkWaitTime = 3;
-    [SerializeField] Transform sharkEndDest;
     bool triggered;
     Enemy enemy;
 
@@ -19,7 +18,10 @@ public class EngineDieSharkVisit : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponentInParent<Player>()) Trigger();
+        if (other.GetComponentInParent<Player>()) {
+            print("triggered by: " + other.gameObject.name);
+            Trigger();
+        }
     }
 
     void Trigger()
@@ -38,6 +40,7 @@ public class EngineDieSharkVisit : MonoBehaviour
             StopAllCoroutines();
             shark.scriptedBehavior = false;
             print("SHARK AGGRO!");
+            shark.fastTurn = false; 
         }
     }
 
@@ -45,14 +48,18 @@ public class EngineDieSharkVisit : MonoBehaviour
     {
         var sub = PlayerManager.i.submarine;
         shark.gameObject.SetActive(true);
-        shark.scriptedBehavior = true;
-        triggered = false;
         shark.transform.position = sub.TransformPoint(sharkSummonOffset);
         shark.SetTarget(sub.TransformPoint(sharkTargetPos));
 
-        while (shark.distanceToTarget > 1.5f) yield return new WaitForEndOfFrame();
-
+        shark.scriptedBehavior = true;
+        triggered = false;
+        shark.fastTurn = true;
         enemy.alert = true;
+
+        while (!shark.atTarget) {
+            yield return new WaitForEndOfFrame();
+        }
+
         shark.SetTarget(shark.transform.position);
 
         float timeLeft = sharkWaitTime;
@@ -60,11 +67,12 @@ public class EngineDieSharkVisit : MonoBehaviour
             timeLeft -= Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
-        print("waiting done!");
 
-        shark.SetTarget(sharkEndDest.position);
-        while (shark.distanceToTarget > 0.4f) yield return new WaitForEndOfFrame();
+        shark.fastTurn = false;
+        shark.SetTarget(sub.TransformPoint(sharkExitPos));
+        while (!shark.atTarget) yield return new WaitForEndOfFrame();
         shark.scriptedBehavior = false;
+        Destroy(shark.gameObject);
     }
 
     private void OnDrawGizmosSelected()
@@ -75,6 +83,8 @@ public class EngineDieSharkVisit : MonoBehaviour
             Gizmos.DrawWireSphere(sub.transform.TransformPoint(sharkSummonOffset), 2);
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(sub.transform.TransformPoint(sharkTargetPos), 2);
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(sub.transform.TransformPoint(sharkExitPos), 2);
         }
     }
 

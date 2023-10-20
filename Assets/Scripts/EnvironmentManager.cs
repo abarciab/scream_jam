@@ -13,17 +13,27 @@ public class EnvironmentManager : MonoBehaviour
     [HideInInspector]public List<Transform> monsters = new List<Transform>();
     public bool nextRuinAvaliable { get { return ruins.Count > 0; } }
     public bool inCombat { get { return NumAggroMonsters() > 0; } }
+    public int numAlertMonsters { get { return NumAlertMonsters(); } }
 
     public void RegisterNewMonster(Transform monster)
     {
         monsters.Add(monster);
     }
 
+    int NumAlertMonsters()
+    {
+        int num = 0;
+        foreach (var m in monsters) {
+            if (m && m.GetComponent<Enemy>().alert) num += 1;
+        }
+        return num;
+    }
+
     int NumAggroMonsters()
     {
         int num = 0;
         foreach (var m in monsters) {
-            if (m.GetComponent<Enemy>().aggro) num += 1;
+            if (m && m.GetComponent<Enemy>().aggro) num += 1;
         }
         return num;
     }
@@ -37,6 +47,11 @@ public class EnvironmentManager : MonoBehaviour
             }
         }
         ruins.Add(newRuin);
+    }
+
+    public void RemoveMonster(Transform monster)
+    {
+        if (monsters.Contains(monster)) monsters.Remove(monster);
     }
 
     public void RemoveRuin(Ruin completedRuin)

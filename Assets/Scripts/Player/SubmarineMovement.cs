@@ -30,6 +30,8 @@ public class SubmarineMovement : MonoBehaviour
     public void Activate() { active = true; }
     public void Deactivate() { active = false; }
 
+    public float totalThrottle { get { return Mathf.Abs(currentThrottle) - minThrottleSpeed; } }
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -42,8 +44,14 @@ public class SubmarineMovement : MonoBehaviour
         propSound.PlaySilent();
     }
 
+    public void StopThrottle()
+    {
+        currentThrottle = 0;
+    }
+
     void Update()
     {
+        propSound.PercentVolume(Mathf.Abs(currentThrottle), 0.1f);
         if (!PlayerManager.i.engineOn) {
             currentThrottle = 0;
             return;
@@ -61,8 +69,8 @@ public class SubmarineMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.D)) inputDir += new Vector3(0, 1, 0);
         if (Input.GetKey(KeyCode.E)) inputDir += new Vector3(0, 0, -1);
         if (Input.GetKey(KeyCode.Q)) inputDir += new Vector3(0, 0, 1);
-        var deltaEueler = Time.deltaTime * turnSpeed * inputDir;
-        var targetDelta = Quaternion.Euler(deltaEueler);
+        var deltaEuler = Time.deltaTime * turnSpeed * inputDir;
+        var targetDelta = Quaternion.Euler(deltaEuler);
         turnDelta = Quaternion.Lerp(turnDelta, targetDelta, turnSmoothness);
         transform.rotation *= turnDelta;
     }

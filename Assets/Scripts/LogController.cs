@@ -21,6 +21,7 @@ public class LogController : MonoBehaviour
         logMainText.text = text;
         logParent.SetActive(true);
         GameManager.i.LockCursor(false);
+        PlayerManager.i.moveScript.StopThrottle();
     }
 
     public void NextRuin()

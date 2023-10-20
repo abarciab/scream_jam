@@ -6,6 +6,6 @@ public class AidanTest : MonoBehaviour
 {
     private void Update()
     {
-        //print("forward: " + transform.forward + ", right: " + transform.right + ", up: " + transform.up);
+        transform.up = PlayerManager.i.submarine.up;
     }
 }

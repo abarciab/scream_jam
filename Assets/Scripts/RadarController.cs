@@ -59,6 +59,9 @@ public class RadarController : MonoBehaviour
             foreach (var o in obstacles) AddNewMarker(o);
             obstacles.Clear();
         }
+        for (int i = 0; i < obstacleData.Count; i++) {
+            if (!obstacleData[i].worldTransform) obstacleData.RemoveAt(i);
+        }
         foreach (var o in obstacleData) DisplayObstacle(o, currentAngle);
     }
 

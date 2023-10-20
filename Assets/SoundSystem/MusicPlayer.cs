@@ -12,9 +12,12 @@ public class MusicPlayer : MonoBehaviour
     Sound currentMusic;
     int currentIndex;
 
-    [Header("combat music")]
+    [Header("Aggro music")]
     [SerializeField] bool inCombat;
     [SerializeField] Sound combatMusic;
+
+    [Header("Alert")]
+    [SerializeField] float alertVolPercent; 
 
     private void Start()
     {
@@ -70,7 +73,8 @@ public class MusicPlayer : MonoBehaviour
 
     void PlayNormal()
     {
-        currentMusic.PercentVolume(1, 0.05f);
+        float targetVol = EnvironmentManager.current.numAlertMonsters > 0 ? alertVolPercent : 1;
+        currentMusic.PercentVolume(targetVol, 0.05f);
         combatMusic.PercentVolume(0, 0.1f);
 
         timeLeft -= Time.deltaTime;

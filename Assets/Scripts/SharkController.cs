@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -27,8 +28,15 @@ public class SharkController : MonoBehaviour
     bool charging;
     Player player;
 
+    [Header("ColorChange")]
+    [SerializeField] List<Renderer> indicatorRenderers = new List<Renderer>();
+    [SerializeField] Renderer bodyRenderer;
+    [SerializeField] Material calmMat, aggroMat;
+
     Enemy enemyScript;
     public float distanceToTarget { get { return Vector3.Distance(transform.position, currentTarget); } }
+    public bool atTarget { get { return distanceToTarget < 1.5f; } }
+    [HideInInspector] public bool fastTurn;
 
     private void OnValidate()
     {
@@ -84,12 +92,16 @@ public class SharkController : MonoBehaviour
 
     private void Update()
     {
+        var mat = aggro ? aggroMat : calmMat;
+        foreach (var r in indicatorRenderers) r.material = mat;
+        bodyRenderer.materials[1] = mat;
+
+        if (enemyScript.aggro) aggro = true;
         if (scriptedBehavior) {
             GoToCurrentTarget();
             return;
         }
 
-        if (enemyScript.aggro) aggro = true;
         attackCooldown -= Time.deltaTime;
         if (aggro) ChasePlayer();
         else if (patrolling) GoToNextPoint();
@@ -164,16 +176,19 @@ public class SharkController : MonoBehaviour
 
     void GoToCurrentTarget()
     {
-        if (Vector3.Distance(transform.position, currentTarget) < targetThreshold * 0.75f) return;
+        if (atTarget) return;
 
         var rot = transform.rotation;
         transform.LookAt(currentTarget);
-        transform.rotation = Quaternion.Lerp(rot, transform.rotation, turnSmoothness);
+        transform.rotation = Quaternion.Lerp(rot, transform.rotation, fastTurn ? 1 : turnSmoothness);
         transform.position += transform.forward * (charging ? chargeSpeed : moveSpeed) * Time.deltaTime;
     }
 
     private void OnDrawGizmos()
     {
+        Gizmos.DrawLine(transform.position, currentTarget);
+        Handles.Label(transform.position, (Mathf.Round(Vector3.Distance(transform.position, currentTarget) * 100)/100).ToString());
+        
         if (!debugPoints) return;
         if (!Application.isPlaying && patrolPointParent && patrolPointParent.childCount != patrolPoints.Count) Init();
 
@@ -182,5 +197,10 @@ public class SharkController : MonoBehaviour
             Gizmos.DrawLine(patrolPoints[i].position, patrolPoints[next].position);
             Gizmos.DrawWireSphere(patrolPoints[i].position, targetThreshold);
         }
+    }
+
+    private void OnDestroy()
+    {
+        EnvironmentManager.current.RemoveMonster(transform);
     }
 }

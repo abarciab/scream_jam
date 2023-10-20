@@ -7,12 +7,15 @@ public class PlayerManager : MonoBehaviour
 {
     private static PlayerManager instance;
     public static PlayerManager i { get { return instance; } }
+    public bool headlightsOn { get { return headlightParent.activeInHierarchy; } }
 
     public Transform submarine;
+    [HideInInspector] public SubmarineMovement moveScript;
     public GameObject playerObj;
     public GameObject mainCamera;
     public PlayerCameraController playerCameraController;
     [HideInInspector] public Player player;
+    public Transform steerCam;
 
     [Header("CameraShake")]
     [SerializeField] List<CinemachineVirtualCamera> cameras = new List<CinemachineVirtualCamera>();
@@ -36,6 +39,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
+        moveScript = submarine.GetComponent<SubmarineMovement>();
         engineSound = Instantiate(engineSound);
         engineFailSound = Instantiate(engineFailSound);
         engineSound.PlaySilent();
@@ -119,6 +123,8 @@ public class PlayerManager : MonoBehaviour
         }
         noise.m_AmplitudeGain = 0;
     }
+
+    
 
 
 }

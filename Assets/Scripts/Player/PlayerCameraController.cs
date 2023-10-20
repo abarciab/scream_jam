@@ -34,12 +34,16 @@ public class PlayerCameraController : MonoBehaviour
         float deltaY = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float deltaX = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        var eulers = transform.localEulerAngles + new Vector3(-deltaX, deltaY, 0f);
+        var deltaEuler = new Vector3(-deltaX, deltaY, 0f);
+        var targetDelta = Quaternion.Euler(deltaEuler);
+        transform.rotation *= targetDelta;
+
+
+        var eulers = transform.localEulerAngles;
         if (eulers.y > 180) eulers.y -= 360;
         if (eulers.x > 180) eulers.x -= 360;
         eulers.x = Mathf.Clamp(eulers.x, -freeLookLimits.x, freeLookLimits.x);
         eulers.y = Mathf.Clamp(eulers.y, -freeLookLimits.y, freeLookLimits.y);
-
         transform.localEulerAngles = eulers;
     }
 }
