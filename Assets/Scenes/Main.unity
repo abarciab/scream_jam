@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 7.489854, g: 7.8633356, b: 11.449052, a: 1}
+  m_IndirectSpecularColor: {r: 7.4898233, g: 7.8633356, b: 11.449296, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -233,7 +233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SeaLevel: 60
-  startWithCheckpoint: 0
+  startWithCheckpoint: 1
   checkPoints:
   - {fileID: 2028225707}
   currentCheckpoint: 0
@@ -2256,7 +2256,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alwaysDisplayRange: 8.37
-  displayWaypoints: 1
+  displayWaypoints: 0
   nextRuinWaypoint: {fileID: 909604819}
   wayPointAnchoredPositionLimits: {x: 350, y: 150}
   hideNextRuin: 0

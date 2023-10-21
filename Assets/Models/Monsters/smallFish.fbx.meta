@@ -9,6 +9,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Body
     second: {fileID: 2100000, guid: 21020fb9168f60a4daad9cd2a482e5e7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Eye
+    second: {fileID: 2100000, guid: 4761e398db7ae4c4a9dbf935864c5611, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

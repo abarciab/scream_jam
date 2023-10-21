@@ -33,6 +33,7 @@ public class PlayerManager : MonoBehaviour
     public bool engineOn;
     [SerializeField] float engineToggleTime = 2;
     [SerializeField] Vector2 waitTimeRange = new Vector2(10, 20);
+    [SerializeField] float startingWaitTime = 10;
     [SerializeField] Sound engineFailSound;
     [SerializeField] GameObject interiorLight, radarUI;
     float failCooldown;
@@ -43,7 +44,7 @@ public class PlayerManager : MonoBehaviour
         engineSound = Instantiate(engineSound);
         engineFailSound = Instantiate(engineFailSound);
         engineSound.PlaySilent();
-        failCooldown = Random.Range(waitTimeRange.x, waitTimeRange.y);
+        failCooldown = startingWaitTime;
     }
 
     private void Update()

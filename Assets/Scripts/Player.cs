@@ -5,10 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    [Header("Health")]
     [SerializeField] float health, maxHealth;
     public float getHealth { get { return health; } }
     public float healthPercent { get { return health / maxHealth; } }
+    [SerializeField] float healWaitTime;
+    float healCooldown;
+    [SerializeField] float healRate;
 
+
+    [Header("Misc")]
     public List<Transform> enemiesInTrigger = new List<Transform>();
     public List<Transform> enemiesInContact = new List<Transform>();
     SubmarineMovement moveScript;
@@ -45,7 +51,20 @@ public class Player : MonoBehaviour
         alarmSound.PercentVolume(1 - healthProgress);
         interiorLight.color = Color.Lerp(originalLightColor, lightAlarmColor, 1 - healthProgress);
 
+        Heal();
+
         if (Input.GetKeyDown(KeyCode.T)) LaunchFlare();
+    }
+
+    void Heal()
+    {
+        healCooldown -= Time.deltaTime;
+        if (EnvironmentManager.current.numAlertMonsters > 0 || EnvironmentManager.current.inCombat) healCooldown = healWaitTime;
+
+        if (healCooldown <= 0 && health < maxHealth) {
+            health += healRate * Time.deltaTime;
+            health = Mathf.Min(health, maxHealth);
+        }
     }
 
     void LaunchFlare()

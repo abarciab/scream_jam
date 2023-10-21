@@ -36,6 +36,8 @@ public class SharkController : MonoBehaviour
     [Header("Anims")]
     [SerializeField] Animator anim;
     [SerializeField] string biteTrigger = "bite";
+    [SerializeField] float distanceFromPlayerWhenBite = 20;
+    bool startedBiteAnim;
 
     Enemy enemyScript;
     public float distanceToTarget { get { return Vector3.Distance(transform.position, currentTarget); } }
@@ -126,8 +128,20 @@ public class SharkController : MonoBehaviour
 
     void SwimToFrontAttack()
     {
-        if (charging) currentTarget = PlayerManager.i.submarine.position;
-        else SwimInFrontOfPlayer();
+        if (!charging) {
+            SwimInFrontOfPlayer();
+            return;
+        }
+    
+        currentTarget = PlayerManager.i.submarine.position;
+        float dist = Vector3.Distance(transform.position, currentTarget);
+        if (dist < distanceFromPlayerWhenBite && !startedBiteAnim) {
+            startedBiteAnim = true;
+            anim.SetTrigger(biteTrigger);
+        } 
+        
+        
+
 
         if (charging && player.enemiesInContact.Contains(transform)) AttackfromFront();
     }
@@ -155,6 +169,7 @@ public class SharkController : MonoBehaviour
 
     void SwimInFrontOfPlayer()
     {
+        startedBiteAnim = false;
         currentTarget = player.transform.position + player.transform.forward * frontAttackChargeDist;
         if (Vector3.Distance(transform.position, currentTarget) < targetThreshold) charging = true;
     }
