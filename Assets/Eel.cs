@@ -8,10 +8,11 @@ public class Eel : MonoBehaviour
     [Header("Patrol")]
     [SerializeField] Transform patrolPointParent;
     List<Transform> patrolPoints = new List<Transform>();
-    [SerializeField] bool inOrder, loop = true, patrolOnStart = true, patrolWhenChill;
+    [SerializeField] bool inOrder, loop = true, patrolOnStart = true, patrolWhenChill, pingPong = true;
     int pointsLeft;
     bool patrolling;
     [SerializeField] bool debugPoints;
+    int currentPointIndex;
 
     [Header("Misc")]
     [SerializeField] float turnSmoothness = 0.05f;
@@ -27,7 +28,7 @@ public class Eel : MonoBehaviour
     Player player;
 
     [Header("ColorChange")]
-    [SerializeField] Renderer bodyRenderer;
+    [SerializeField] Renderer eyeRenderer;
     [SerializeField] Material calmMat, aggroMat;
 
     [Header("Anims")]
@@ -68,6 +69,7 @@ public class Eel : MonoBehaviour
     public void StartPatrol()
     {
         if (patrolPoints.Count == 0) return;
+        currentPointIndex = 0;
         pointsLeft = patrolPoints.Count;
         patrolling = true;
         NextPoint();
@@ -76,15 +78,19 @@ public class Eel : MonoBehaviour
     void NextPoint()
     {
         if (pointsLeft == 0) {
+            ReversePatrolPointOrder();
             EndPatrol();
             return;
         }
 
-        int index = inOrder ? 0 : Random.Range(0, patrolPoints.Count);
-        currentTarget = patrolPoints[index].position;
-        patrolPoints.Add(patrolPoints[index]);
-        patrolPoints.RemoveAt(index);
+        currentTarget = patrolPoints[currentPointIndex].position;
+        currentPointIndex += 1;
         pointsLeft -= 1;
+    }
+
+    void ReversePatrolPointOrder()
+    {
+        patrolPoints.Reverse();
     }
 
     void EndPatrol()
@@ -95,10 +101,7 @@ public class Eel : MonoBehaviour
 
     private void Update()
     {
-        var mat = aggro ? aggroMat : calmMat;
-        var mats = bodyRenderer.materials;
-        mats[1] = mat;
-        bodyRenderer.materials = mats;
+        eyeRenderer.material = aggro ? aggroMat : calmMat;
 
         if (enemyScript.aggro) aggro = true;
         if (scriptedBehavior) {
@@ -179,7 +182,8 @@ public class Eel : MonoBehaviour
         if (!Application.isPlaying && patrolPointParent && patrolPointParent.childCount != patrolPoints.Count) Init();
 
         for (int i = 0; i < patrolPoints.Count; i++) {
-            int next = i == patrolPoints.Count - 1 ? 0 : i + 1;
+            if (i == patrolPoints.Count - 1) break;
+            var next = i + 1;
             Gizmos.DrawLine(patrolPoints[i].position, patrolPoints[next].position);
             Gizmos.DrawWireSphere(patrolPoints[i].position, targetThreshold);
         }
