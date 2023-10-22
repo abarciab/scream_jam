@@ -62,7 +62,6 @@ public class Eel : MonoBehaviour
     {
         enemyScript = GetComponent<Enemy>();
         player = PlayerManager.i.player;
-        EnvironmentManager.current.RegisterNewMonster(transform);
         if (patrolOnStart) StartPatrol();
     }
 

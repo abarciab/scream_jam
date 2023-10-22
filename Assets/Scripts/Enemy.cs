@@ -22,6 +22,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+        EnvironmentManager.current.RegisterNewMonster(transform);
         Scream = Instantiate(Scream);
         screamCooldown = Random.Range(screamWaitRange.x, screamWaitRange.y);
     }
