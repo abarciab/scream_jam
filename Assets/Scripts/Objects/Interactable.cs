@@ -10,6 +10,7 @@ public class Interactable : MonoBehaviour
 {
     [Tooltip("Lock the camera and change to vcam")]
     public bool doLockState;
+    [SerializeField] bool steeringCam;
 
 
     [ConditionalField(nameof(doLockState))]
@@ -29,6 +30,7 @@ public class Interactable : MonoBehaviour
     [SerializeField] bool dontHoverWhenActive;
     [SerializeField] List<Renderer> renderers = new List<Renderer>();
     [SerializeField] Material normalMat, HoverMat;
+    [SerializeField] GameObject hoverText;
     bool activated;
 
     [Header("Sounds")]
@@ -50,6 +52,7 @@ public class Interactable : MonoBehaviour
         OnHover.Invoke();
         if (!changeColorOnHover) return;
         ChangeColor(normalMat);
+        hoverText.SetActive(false);
     }
 
     private void OnMouseEnter()
@@ -57,6 +60,7 @@ public class Interactable : MonoBehaviour
         OnHover.Invoke();
         if (!changeColorOnHover || dontHoverWhenActive && activated) return;
         ChangeColor(HoverMat);
+        hoverText.SetActive(true);
     }
 
     void ChangeColor(Material mat)
@@ -75,7 +79,12 @@ public class Interactable : MonoBehaviour
         }
 
         activated = !activated;
-        if (activated && dontHoverWhenActive) ChangeColor(normalMat);
+        if (steeringCam) PlayerManager.i.currentlySteering = activated;
+
+        if (activated && dontHoverWhenActive) {
+            ChangeColor(normalMat);
+            hoverText.SetActive(false);
+        }
         if (inLockState) return;
 
         if (doLockState)
@@ -93,6 +102,7 @@ public class Interactable : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Tab))
         {
+            if (steeringCam) PlayerManager.i.currentlySteering = false;
             ExitLockState();
         }
     }

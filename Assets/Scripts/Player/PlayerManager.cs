@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -33,10 +34,17 @@ public class PlayerManager : MonoBehaviour
     public bool engineOn;
     [SerializeField] float engineToggleTime = 2;
     [SerializeField] Vector2 waitTimeRange = new Vector2(10, 20);
-    [SerializeField] float startingWaitTime = 10;
     [SerializeField] Sound engineFailSound;
     [SerializeField] GameObject interiorLight, radarUI;
     float failCooldown;
+    [HideInInspector] public bool currentlySteering;
+    public bool throttleEnabled;
+
+
+    public void UpdateEngineFailRange(Vector2 newRange)
+    {
+        waitTimeRange = newRange;
+    }
 
     private void Start()
     {
@@ -44,7 +52,7 @@ public class PlayerManager : MonoBehaviour
         engineSound = Instantiate(engineSound);
         engineFailSound = Instantiate(engineFailSound);
         engineSound.PlaySilent();
-        failCooldown = startingWaitTime;
+        failCooldown = Random.Range(waitTimeRange.x, waitTimeRange.y);
     }
 
     private void Update()

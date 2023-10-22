@@ -8,7 +8,7 @@ public class WindowUI : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI depthText;
     [SerializeField] Transform wheelParent;
-    [SerializeField] GameObject depthParent, compassParent, throttleParent, restartParent;
+    [SerializeField] GameObject depthParent, compassParent, throttleParent, restartParent, headLightsOff;
     [SerializeField] bool showCompass;
     [SerializeField] Slider healthSlider, throttleSlider, restartSlider;
     [SerializeField] GameObject poewrOffText;
@@ -23,6 +23,7 @@ public class WindowUI : MonoBehaviour
         throttleParent.SetActive(engineOn);
         compassParent.SetActive(engineOn && showCompass);
         healthSlider.value = PlayerManager.i.player.healthPercent;
+        headLightsOff.SetActive(!PlayerManager.i.headlightsOn);
 
         float waitTimeLeft = PlayerManager.i.player.getWaitTimeLeftPercent();
         restartParent.SetActive(engineOn && waitTimeLeft > 0 && !PlayerManager.i.moveScript.enabled);

@@ -49,6 +49,16 @@ public class AudioManager : MonoBehaviour {
         PlayerPrefs.SetFloat("musicVolume", musicVolume);
     }
 
+    public void Pause()
+    {
+        foreach (var s in soundCoordinators) s.Pause();
+    }
+
+    public void Resume()
+    {
+        foreach (var s in soundCoordinators) s.Resume();
+    }
+
     public void ResetVolumeSaveData()
     {
     }

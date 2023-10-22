@@ -88,11 +88,13 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.GetComponent<Enemy>()) enemiesInTrigger.Add(other.transform);
+        if (other.GetComponent<HideWhenTouchingPlayer>()) other.GetComponent<HideWhenTouchingPlayer>().Hide();
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (enemiesInTrigger.Contains(other.transform)) enemiesInTrigger.Remove(other.transform);
+        if (other.GetComponent<HideWhenTouchingPlayer>()) other.GetComponent<HideWhenTouchingPlayer>().Show();
     }
 
     public void ShakeSub(float amount = 0.5f)

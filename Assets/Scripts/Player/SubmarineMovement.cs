@@ -99,10 +99,20 @@ public class SubmarineMovement : MonoBehaviour
         }
 
         rb.angularVelocity = Vector3.zero;
-        if (Input.GetKey(KeyCode.LeftShift) && currentThrottle > -1) currentThrottle -= throttleChangeSpeed * slowDownMod * Time.deltaTime;
-        if (Input.GetKey(KeyCode.Space) && currentThrottle < 1) currentThrottle += throttleChangeSpeed * Time.deltaTime;
         Propel();
 
+        if (!PlayerManager.i.currentlySteering) return;
+        if (PlayerManager.i.throttleEnabled) ControlThrottle();
+        Steer();
+    }
+
+    void ControlThrottle()
+    {
+        if (Input.GetKey(KeyCode.LeftShift) && currentThrottle > -1) currentThrottle -= throttleChangeSpeed * slowDownMod * Time.deltaTime;
+        if (Input.GetKey(KeyCode.Space) && currentThrottle < 1) currentThrottle += throttleChangeSpeed * Time.deltaTime;
+    }
+    void Steer()
+    {
         Vector3 inputDir = Vector3.zero;
         if (Input.GetKey(KeyCode.W)) inputDir += new Vector3(-1, 0, 0);
         if (Input.GetKey(KeyCode.S)) inputDir += new Vector3(1, 0, 0);

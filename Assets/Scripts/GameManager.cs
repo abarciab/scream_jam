@@ -1,3 +1,4 @@
+using MyBox;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,9 +15,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] List<Transform> checkPoints;
     [SerializeField] int currentCheckpoint;
 
+    [Space()]
+    [SerializeField] Vector2 startingFailRate;
+
     private void Start()
     {
         if (startWithCheckpoint) {
+            PlayerManager.i.UpdateEngineFailRange(startingFailRate);
             PlayerManager.i.submarine.transform.position = checkPoints[currentCheckpoint].position;
             PlayerManager.i.submarine.transform.rotation = checkPoints[currentCheckpoint].rotation;
         }
@@ -27,5 +32,19 @@ public class GameManager : MonoBehaviour
     {
         Cursor.lockState = _lock ? CursorLockMode.Locked : CursorLockMode.Confined;
         Cursor.visible = !_lock;
+    }
+
+    [ButtonMethod]
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+        AudioManager.instance.Pause();
+    }
+
+    [ButtonMethod]
+    public void Resume()
+    {
+        Time.timeScale = 1;
+        AudioManager.instance.Resume();
     }
 }

@@ -14,6 +14,7 @@ public class EnvironmentManager : MonoBehaviour
     public bool nextRuinAvaliable { get { return ruins.Count > 0; } }
     public bool inCombat { get { return NumAggroMonsters() > 0; } }
     public int numAlertMonsters { get { return NumAlertMonsters(); } }
+    public bool globalDim;
 
     public void RegisterNewMonster(Transform monster)
     {
@@ -62,6 +63,11 @@ public class EnvironmentManager : MonoBehaviour
     public Vector3 GetNextRuinPos()
     {
         return ruins.Count > 0 ? ruins[0].transform.position : Vector3.zero;
+    }
+
+    public string getNextRuinName()
+    {
+        return ruins.Count > 0 ? ruins[0].GetName(): "unknown beacon";
     }
 
     float DistanceToMonster()

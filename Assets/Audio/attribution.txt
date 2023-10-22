@@ -3,8 +3,6 @@ Eerie Tone Music Background Loop -- TheDweebMan
 Tension and Chase! - Disturbed Horror Loop -- JessKawaiiXxX
 CD_PLENITUDE_003.wav -- kevp888
 Lost In The Dream.mp3 -- SoundFlakes
-Horror Inspect Sound, UI, or In-Game Notification 01.wav -- MATRIXXX_
-Button Switch, Off.wav -- MATRIXXX_
 Sonar sweep beep -- SamsterBirdies
 Car Engine, Exterior, A.wav -- InspectorJ
 submarine prop whooshing -- rexen_devar
@@ -12,9 +10,17 @@ Error_03.wav -- distilleryst...
 Breaker-1.wav -- Deathscyp
 underwater wailing -- CuddleNucks
 SALY_Margaux_2015_2016_Creature_Scream.wav -- univ_lyon3
-Vibrations 01, 02 Sec.wav -- MATRIXXX_
 Futuristic Alarm -- EminYILDIRIM
 remix of 87569__FreqMan__G_1J_Mower_Dies_Tweaked_2.mp3 -- Timbre
 Propellor plane indoors ambience 2.wav -- finalCrystine
 Car Crash (with Glass) -- magnuswaker
 Heart beat 2.Strong pounding.Blood Flows In The veins(6lrs).wav -- newlocknew
+Underwater Deep Water Loop -- Department64
+Beep 5 -- Eponn
+Futuristic Inspect Sound, UI, or In-Game Notification.wav -- MATRIXXX_
+Vibrations 01, 02 Sec.wav -- MATRIXXX_
+Horror Inspect Sound, UI, or In-Game Notification 01.wav -- MATRIXXX_
+Button Switch, Off.wav -- MATRIXXX_
+rocks, assorted -- Jeff Row
+old phone ringing -- cvp1965
+Radio Buzz / Squelch 1 -- magnuswaker

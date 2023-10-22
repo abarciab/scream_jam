@@ -4,31 +4,24 @@ using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
 {
-
     public Camera playerCamera;
+    [SerializeField] LayerMask interactableRaycastLayerMask;
 
-    // Update is called once per frame
     void Update()
     {
-        if (PlayerManager.i.playerCameraController.locked)
-        {
-            return;
-        }
+        if (PlayerManager.i.playerCameraController.locked || Time.timeScale == 0) return;
+        if (Input.GetMouseButtonDown(0)) CastRay();
+    }
 
-        // Check for mouse input or any trigger event that initiates the raycast
-        if (Input.GetMouseButtonDown(0))
-        {
-            RaycastHit hit;
-            Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
+    void CastRay()
+    {
+        Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
+        bool hit = (Physics.Raycast(ray.origin, ray.direction, out var hitData, 100, interactableRaycastLayerMask));
+        if (!hit) return;
 
-            if (Physics.Raycast(ray, out hit))
-            {
-                Interactable interactable = hit.collider.GetComponent<Interactable>();
-                if (interactable != null)
-                {
-                    interactable.Interact();
-                }
-            }
+        Interactable interactable = hitData.collider.GetComponent<Interactable>();
+        if (interactable != null) {
+            interactable.Interact();
         }
     }
 
