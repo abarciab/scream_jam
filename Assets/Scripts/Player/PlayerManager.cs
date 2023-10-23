@@ -46,7 +46,6 @@ public class PlayerManager : MonoBehaviour
     public void GetNoisePecent()
     {
         float throttleMod = Mathf.Abs(moveScript.currentThrottle);
-
     }
 
     public void UpdateEngineFailRange(Vector2 newRange)
