@@ -25,7 +25,7 @@ public class SharkController : MonoBehaviour
     [SerializeField] bool behindAttack, frontAttack;
     [SerializeField] float backAwayDist = 4, attackResetTime = 3, attackDamage, frontAttackChargeDist = 50, chargeSpeed, chargeForce;
     float attackCooldown;
-    bool charging;
+    bool charging, pickedFrontPlayerPosition;
     Player player;
 
     [Header("ColorChange")]
@@ -156,6 +156,7 @@ public class SharkController : MonoBehaviour
         attackCooldown = attackResetTime;
         currentTarget = transform.position;
         charging = false;
+        pickedFrontPlayerPosition = false;
 
         CompleteAttack();
     }
@@ -170,7 +171,10 @@ public class SharkController : MonoBehaviour
     void SwimInFrontOfPlayer()
     {
         startedBiteAnim = false;
-        currentTarget = player.transform.position + player.transform.forward * frontAttackChargeDist;
+        if (!pickedFrontPlayerPosition) {
+            currentTarget = player.transform.position + player.transform.forward * frontAttackChargeDist;
+            pickedFrontPlayerPosition = true;
+        }
         if (Vector3.Distance(transform.position, currentTarget) < targetThreshold) charging = true;
     }
 
