@@ -24,5 +24,7 @@ MonoBehaviour:
   pitch: 1
   volume: 0.2
   voiceLines: 0
+  randomizePitch: 0
+  pitchRandomizeAmount: 0.042
   audioSource: {fileID: 0}
   instantialized: 0

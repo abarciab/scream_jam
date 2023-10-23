@@ -39,10 +39,10 @@ public class Sound : ScriptableObject
     [SerializeField] List<Clip> clips = new List<Clip>();
     public SoundType type;
     [SerializeField] bool SynchronizePitchAndVolume = true;
-    [ConditionalHide(nameof(SynchronizePitchAndVolume)), Range(0, 2)]
-    [SerializeField] float pitch;
-    [ConditionalHide(nameof(SynchronizePitchAndVolume)), Range(0, 2)]
-    [SerializeField] float volume;
+    [ConditionalHide(nameof(SynchronizePitchAndVolume)), Range(0, 2), DefaultValue(1.0f)]
+    [SerializeField] float pitch = 1;
+    [ConditionalHide(nameof(SynchronizePitchAndVolume)), Range(0, 2), DefaultValue(1.0f)]
+    [SerializeField] float volume = 1;
     float actualVolume;
     [SerializeField, HideInInspector] bool voiceLines;
 

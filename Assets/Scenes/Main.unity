@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 7.4706926, g: 7.8251963, b: 11.348664, a: 1}
+  m_IndirectSpecularColor: {r: 7.470479, g: 7.8249826, b: 11.348695, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 9673925}
   - component: {fileID: 9673924}
   - component: {fileID: 9673926}
+  - component: {fileID: 9673927}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -208,6 +209,24 @@ MonoBehaviour:
   ambientWaitTimeRanges: []
   ambientClipsTransforms: []
   ambientClipsDistance: 0
+--- !u!114 &9673927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9673923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efca7b0145733544e97229a47e2a59b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sound: {fileID: 11400000, guid: d66fb66a3e9762c4abbda80eeb6ac391, type: 2}
+  play: 0
+  _3D: 0
+  restart: 1
+  makeNew: 0
+  makeNewAuto: 1
 --- !u!1 &19395153
 GameObject:
   m_ObjectHideFlags: 0
