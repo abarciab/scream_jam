@@ -12,11 +12,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93e0513045be1974d934eb6431407da8, type: 3}
   m_Name: ambMetalUnderwater
   m_EditorClassIdentifier: 
-  clips: []
+  clips:
+  - name: ambMetalUnderwaterEcho01
+    clip: {fileID: 8300000, guid: 206e1961f5c47f44281a6b31d2aa677a, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambMetalUnderwaterEcho02
+    clip: {fileID: 8300000, guid: 9e0d12b0effd38246b9a1532d9bdb4ac, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambMetalUnderwaterEcho03
+    clip: {fileID: 8300000, guid: b0e4538e5ba6b0644a2140647b0c1cc9, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambMetalUnderwaterEcho04
+    clip: {fileID: 8300000, guid: bb216f7711fec2c4fa7049973cc5ec36, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambMetalUnderwaterEcho05
+    clip: {fileID: 8300000, guid: bcf89286a4ae8a347a4abe949073bedc, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
   type: 0
   SynchronizePitchAndVolume: 1
-  pitch: 0
-  volume: 0
+  pitch: 1
+  volume: 0.01
   voiceLines: 0
+  randomizePitch: 0
+  pitchRandomizeAmount: 0
   audioSource: {fileID: 0}
   instantialized: 0

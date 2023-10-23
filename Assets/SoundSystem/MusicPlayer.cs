@@ -25,13 +25,19 @@ public class MusicPlayer : MonoBehaviour
     [SerializeField] Sound ambientLoop;
     [SerializeField] List<Sound> ambientSounds = new List<Sound>();
     [SerializeField] List<Vector2> ambientWaitTimeRanges = new List<Vector2>();
-    [SerializeField] List<Transform> ambientClipsTransforms = new List<Transform>();
+    List<Transform> ambientClipsTransforms = new List<Transform>();
     [SerializeField] float ambientClipsDistance;
     List<float> ambientClipCooldowns = new List<float>();
 
 
     private void Start()
     {
+        for (int i = 0; i < ambientSounds.Count; i++) {
+            ambientClipsTransforms.Add(new GameObject("AmbientSource " + i).transform);
+            ambientClipsTransforms[i].parent = Camera.main.transform;
+            ambientClipCooldowns.Add(0);
+        }
+
         ambientLoop = Instantiate(ambientLoop);
         pauseMusic = Instantiate(pauseMusic);
         alertHeartbeat = Instantiate(alertHeartbeat);
@@ -105,6 +111,7 @@ public class MusicPlayer : MonoBehaviour
 
     void PlayAmbientClip(int index)
     {
+        print("PLAYING!");
         ambientClipsTransforms[index].localPosition = Random.insideUnitSphere * ambientClipsDistance;
         ambientSounds[index].Play(ambientClipsTransforms[index]);
         ambientClipCooldowns[index] = Random.Range(ambientWaitTimeRanges[index].x, ambientWaitTimeRanges[index].y);

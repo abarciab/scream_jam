@@ -19,10 +19,12 @@ MonoBehaviour:
     CustomPitchAndVolume: 0
     volume: 0
     pitch: 0
-  type: 0
+  type: 1
   SynchronizePitchAndVolume: 1
   pitch: 1
-  volume: 0.04
+  volume: 0.02
   voiceLines: 0
+  randomizePitch: 0
+  pitchRandomizeAmount: 0
   audioSource: {fileID: 0}
   instantialized: 0

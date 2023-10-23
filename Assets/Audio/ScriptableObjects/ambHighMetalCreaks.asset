@@ -12,11 +12,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93e0513045be1974d934eb6431407da8, type: 3}
   m_Name: ambHighMetalCreaks
   m_EditorClassIdentifier: 
-  clips: []
+  clips:
+  - name: ambHighMetalCreaks01
+    clip: {fileID: 8300000, guid: a646ac0b745abf7429babc9d49f3c124, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambHighMetalCreaks02
+    clip: {fileID: 8300000, guid: aee507fa92d6d2b438c02fadcf16b789, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambHighMetalCreaks03
+    clip: {fileID: 8300000, guid: 3ad0437ee3385ba47b5d0fdf770f232f, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambHighMetalCreaks04
+    clip: {fileID: 8300000, guid: af9f38487d09c7e47869de80d0022282, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambHighMetalCreaks05
+    clip: {fileID: 8300000, guid: c55aaf82bde354546a5f492b0d64c5d7, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambHighMetalCreaks06
+    clip: {fileID: 8300000, guid: 3caaf36561c38e749b9da9cb73dd34c8, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambHighMetalCreaks07
+    clip: {fileID: 8300000, guid: 25d27c1080ab93941808ed597c085bfe, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambHighMetalCreaks08
+    clip: {fileID: 8300000, guid: f52b8caf57006dc4a89ef038c8660ea0, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambHighMetalCreaks09
+    clip: {fileID: 8300000, guid: 20be8b5cf3bbdb64cad0e83208c4f36f, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
   type: 0
   SynchronizePitchAndVolume: 1
-  pitch: 0
-  volume: 0
+  pitch: 1
+  volume: 0.01
   voiceLines: 0
+  randomizePitch: 0
+  pitchRandomizeAmount: 0
   audioSource: {fileID: 0}
   instantialized: 0

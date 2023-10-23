@@ -54,6 +54,11 @@ public class Sound : ScriptableObject
     Vector3 sourcePos;
     bool setPos;
 
+    private void OnValidate()
+    {
+        foreach (var clip in clips) if (clip.clip) clip.name = clip.clip.name;
+    }
+
     public void UpdateLocalPosition(Vector3 pos)
     {
         sourcePos = pos;

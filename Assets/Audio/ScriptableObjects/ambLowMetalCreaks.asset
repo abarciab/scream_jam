@@ -12,11 +12,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93e0513045be1974d934eb6431407da8, type: 3}
   m_Name: ambLowMetalCreaks
   m_EditorClassIdentifier: 
-  clips: []
+  clips:
+  - name: ambLowMetalCreaks01
+    clip: {fileID: 8300000, guid: 584202b1344345540bc12a0a82cdce5d, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambLowMetalCreaks02
+    clip: {fileID: 8300000, guid: f97c8349964cd3f4e925d8291314792e, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambLowMetalCreaks03
+    clip: {fileID: 8300000, guid: 8f9828cc1a830a94faed6439474f9ff8, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambLowMetalCreaks04
+    clip: {fileID: 8300000, guid: 2d4c529d89380f246a20ee324cbd1227, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambLowMetalCreaks05
+    clip: {fileID: 8300000, guid: 8d474ddad7e072d4e8568cd1274e9323, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambLowMetalCreaks06
+    clip: {fileID: 8300000, guid: 0456ad6a645c7e74e84e891c7cbed3c0, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambLowMetalCreaks07
+    clip: {fileID: 8300000, guid: 7c0aff280274dcd4dbb360b13800d3f2, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
   type: 0
   SynchronizePitchAndVolume: 1
-  pitch: 0
-  volume: 0
+  pitch: 1
+  volume: 0.01
   voiceLines: 0
+  randomizePitch: 0
+  pitchRandomizeAmount: 0
   audioSource: {fileID: 0}
   instantialized: 0

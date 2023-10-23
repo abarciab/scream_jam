@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5958004688558604665
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6409874540694001037}
+  - component: {fileID: 2759109144648474783}
+  - component: {fileID: 8382756448207205673}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6409874540694001037
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5958004688558604665}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2759109144648474783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5958004688558604665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84b49b646ca2357449847a35c6832194, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coordinatorPrefab: {fileID: 2297566603056730170, guid: b6e8acef0aace3348ba0997037c9e838,
+    type: 3}
+  sfxMixerG: {fileID: 24300002, guid: 0edfa5b159780004fbfd85c5594ed7fb, type: 2}
+  musicMixerG: {fileID: 24300002, guid: 13e0badaebc7a594d80ccf9b26917afd, type: 2}
+  sfxMixer: {fileID: 24100000, guid: 0edfa5b159780004fbfd85c5594ed7fb, type: 2}
+  musicMixer: {fileID: 24100000, guid: 13e0badaebc7a594d80ccf9b26917afd, type: 2}
+  volumeRange: {x: -20, y: 20}
+  masterStartVol: 0.5
+  sfxStartVol: 1
+  musicStartVol: 0.5
+  masterVolume: 0.5
+  sfxVolume: 1
+  musicVolume: 0.5
+  setVolumeToStartVolume: 0
+--- !u!114 &8382756448207205673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5958004688558604665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a03c4e32066fe4d975a943ec7f7434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tracks:
+  - {fileID: 11400000, guid: c075f76dc0dd0df45b47a3d547ac3e3d, type: 2}
+  - {fileID: 11400000, guid: 0792723fde2e37840990be40c3365b5d, type: 2}
+  silenceWaitRange: {x: 10, y: 60}
+  pauseMusic: {fileID: 11400000, guid: ca0367d2587f8c144a6250727e6f85ed, type: 2}
+  inCombat: 0
+  combatMusic: {fileID: 11400000, guid: 39e00082e263762479dd232ec0c937bc, type: 2}
+  alertHeartbeat: {fileID: 11400000, guid: b02fac3b4708b984ea3a9e3a72ea18a8, type: 2}
+  alertVolPercent: 0
+  ambientLoop: {fileID: 11400000, guid: 9cc492d7d0a05534593cccf40f480c1f, type: 2}
+  ambientSounds:
+  - {fileID: 11400000, guid: f593cf22a3bcffb40bfa7d1c09089b8d, type: 2}
+  - {fileID: 11400000, guid: 49269f87f3a24b140be3861e812e54cb, type: 2}
+  - {fileID: 11400000, guid: 65cd51aac4f98dd49a902ef1d1392312, type: 2}
+  ambientWaitTimeRanges:
+  - {x: 5, y: 10}
+  - {x: 5, y: 10}
+  - {x: 5, y: 10}
+  ambientClipsDistance: 0

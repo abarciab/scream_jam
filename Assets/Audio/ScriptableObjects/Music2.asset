@@ -15,14 +15,16 @@ MonoBehaviour:
   clips:
   - name: 
     clip: {fileID: 8300000, guid: 03368ff7b2343e74e932e2fbc76a443e, type: 3}
-    looping: 1
+    looping: 0
     CustomPitchAndVolume: 0
     volume: 0
     pitch: 0
-  type: 0
+  type: 1
   SynchronizePitchAndVolume: 1
   pitch: 1
-  volume: 0.04
+  volume: 0.02
   voiceLines: 0
+  randomizePitch: 0
+  pitchRandomizeAmount: 0
   audioSource: {fileID: 0}
   instantialized: 0
