@@ -12,7 +12,7 @@ public class Eel : MonoBehaviour
     int pointsLeft;
     bool patrolling;
     [SerializeField] bool debugPoints;
-    int currentPointIndex;
+    [SerializeField] int currentPointIndex;
 
     [Header("Misc")]
     [SerializeField] float turnSmoothness = 0.05f;
@@ -23,7 +23,7 @@ public class Eel : MonoBehaviour
     [Header("Aggro")]
     [SerializeField] bool aggro;
     [SerializeField] bool behindAttack, frontAttack;
-    [SerializeField] float attackResetTime = 3, attackDamage, chargeSpeed, chargeForce, backAwayDist;
+    [SerializeField] float attackResetTime = 3, attackDamage, chargeSpeed, chargeForce, backAwayDist, contactDamage = 55;
     float attackCooldown;
     Player player;
 
@@ -37,14 +37,32 @@ public class Eel : MonoBehaviour
     [SerializeField] float distanceFromPlayerWhenBite = 20;
     bool startedBiteAnim;
 
+    [Header("Misc")]
+    [SerializeField] Sound rumbleSound;
+    [SerializeField] Sound bigScreamSound;
+
     Enemy enemyScript;
     public float distanceToTarget { get { return Vector3.Distance(transform.position, currentTarget); } }
     public bool atTarget { get { return distanceToTarget < 3f; } }
     [HideInInspector] public bool fastTurn;
+    bool manuallySetPatrolPoint;
 
     private void OnValidate()
     {
         if (patrolPointParent != null) Init();
+    }
+
+    public void SetPatrolIndex(int index, bool reverseList = true)
+    {
+        currentPointIndex = index;
+        manuallySetPatrolPoint = true;
+        if (reverseList) ReversePatrolPointOrder();
+    }
+
+    public void BigScream()
+    {
+        if (!bigScreamSound.instantialized) bigScreamSound = Instantiate(bigScreamSound);
+        bigScreamSound.Play();
     }
 
     public void SetTarget(Vector3 newTarget)
@@ -60,6 +78,9 @@ public class Eel : MonoBehaviour
 
     private void Start()
     {
+        rumbleSound = Instantiate(rumbleSound);
+        bigScreamSound = Instantiate(bigScreamSound);
+        rumbleSound.Play(transform);
         enemyScript = GetComponent<Enemy>();
         player = PlayerManager.i.player;
         if (patrolOnStart) StartPatrol();
@@ -68,7 +89,8 @@ public class Eel : MonoBehaviour
     public void StartPatrol()
     {
         if (patrolPoints.Count == 0) return;
-        currentPointIndex = 0;
+        if (!manuallySetPatrolPoint) currentPointIndex = 0;
+        manuallySetPatrolPoint = false;
         pointsLeft = patrolPoints.Count;
         patrolling = true;
         NextPoint();
@@ -76,7 +98,7 @@ public class Eel : MonoBehaviour
 
     void NextPoint()
     {
-        if (pointsLeft == 0) {
+        if (pointsLeft == 0 || currentPointIndex >= patrolPoints.Count) {
             ReversePatrolPointOrder();
             EndPatrol();
             return;
@@ -100,6 +122,11 @@ public class Eel : MonoBehaviour
 
     private void Update()
     {
+        if (player.enemiesInContact.Contains(transform) && attackCooldown <= 0) {
+            player.Damage(contactDamage);
+            attackCooldown = attackResetTime;
+        }
+
         eyeRenderer.material = aggro ? aggroMat : calmMat;
 
         if (enemyScript.aggro) aggro = true;
@@ -123,7 +150,7 @@ public class Eel : MonoBehaviour
 
     void CompleteAttack()
     {
-        enemyScript.EnterCalm();
+        enemyScript.EnterPostAttackCalm();
         aggro = false;
         PickNewAttack();
     }
@@ -175,7 +202,7 @@ public class Eel : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, currentTarget);
-        Handles.Label(transform.position, (Mathf.Round(Vector3.Distance(transform.position, currentTarget) * 100) / 100).ToString());
+        //Handles.Label(transform.position, (Mathf.Round(Vector3.Distance(transform.position, currentTarget) * 100) / 100).ToString());
 
         if (!debugPoints) return;
         if (!Application.isPlaying && patrolPointParent && patrolPointParent.childCount != patrolPoints.Count) Init();

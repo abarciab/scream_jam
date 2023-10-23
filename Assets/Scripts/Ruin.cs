@@ -9,7 +9,7 @@ public class Ruin : MonoBehaviour
     [Min(1)] public int num;
     [SerializeField] float logReadRange = 4;
     [HideInInspector] public bool nextRuin;
-    [SerializeField] TextAsset logText;
+    [SerializeField] List<LogCoordinator> logs = new List<LogCoordinator>();
 
     private void OnValidate()
     {
@@ -21,24 +21,20 @@ public class Ruin : MonoBehaviour
     void Start()
     {
         EnvironmentManager.current.RegisterNewRuin(this);
+        foreach (var l in logs) l.ruin = this;
     }
 
-    private void Update()
+    public Vector3 GetPosition()
     {
-        if (!nextRuin) return;
-
-        var dist = Vector3.Distance(transform.position, Camera.main.transform.position);
-        bool inRange = dist < logReadRange;
-        UIManager.current.DisplayReadLogButtion(inRange);
-        if (inRange && Input.GetKeyDown(KeyCode.F)) ReadLog(); 
+        return logs[0].transform.position;
     }
 
-    void ReadLog()
+    public void RemoveLog(LogCoordinator log)
     {
-        UIManager.current.DisplayLog(logText.text);
-        Discover();
+        logs.Remove(log);
+        if (logs.Count == 0) Discover();
     }
-
+    
     public void Discover()
     {
         EnvironmentManager.current.RemoveRuin(this);

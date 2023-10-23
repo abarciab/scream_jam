@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[SelectionBase]
 public class Decoration : MonoBehaviour
 {
     [SerializeField] float generateRadius;

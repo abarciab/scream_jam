@@ -28,6 +28,24 @@ public class TitleController : MonoBehaviour
         StartCoroutine(TransitionToGame());
     }
 
+    public void Quit()
+    {
+        fade.SetActive(true);
+        Click();
+        StartCoroutine(FadeThenClose());
+    }
+
+    IEnumerator FadeThenClose()
+    {
+        float timePassed = 0;
+        while (timePassed < transitionTime) {
+            ambientSound.PercentVolume(Mathf.Lerp(1, 0, timePassed / transitionTime));
+            yield return new WaitForEndOfFrame();
+            timePassed += Time.deltaTime;
+        }
+        Application.Quit();
+    }
+
     IEnumerator TransitionToGame()
     {
         float timePassed = 0;

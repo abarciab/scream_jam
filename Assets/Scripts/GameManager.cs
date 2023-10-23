@@ -18,9 +18,13 @@ public class GameManager : MonoBehaviour
     [Space()]
     [SerializeField] Vector2 startingFailRate;
 
+    [Header("Pause")]
+    [SerializeField] GameObject pauseMenu;
+
     private void Start()
     {
         if (startWithCheckpoint) {
+            if (currentCheckpoint == 0) FindObjectOfType<RadioController>(true).gameObject.SetActive(true);
             PlayerManager.i.UpdateEngineFailRange(startingFailRate);
             JumpToCheckpoint();
         }
@@ -45,6 +49,8 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
         AudioManager.instance.Pause();
+        pauseMenu.SetActive(true);
+        LockCursor(false);
     }
 
     [ButtonMethod]
@@ -52,10 +58,15 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1;
         AudioManager.instance.Resume();
+        LockCursor(true);
     }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape)){
+            PauseGame();
+        }
+
         if (Input.GetKeyDown(KeyCode.UpArrow)) {
             if (currentCheckpoint < checkPoints.Count) currentCheckpoint += 1;
             JumpToCheckpoint();

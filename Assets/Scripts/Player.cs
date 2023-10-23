@@ -103,7 +103,6 @@ public class Player : MonoBehaviour
 
     public void Damage(float damage)
     {
-        print("Hit for " + damage + " damage");
         health -= damage;
         if (health <= 0) {
             health = 0;
@@ -140,7 +139,7 @@ public class Player : MonoBehaviour
         return currentDisableTime != 0 ? 1 - waitTimeLeft / currentDisableTime : 0;
     }
 
-    void Die()
+    public void Die()
     {
         SceneManager.LoadScene(1);
         SceneManager.LoadScene(2, LoadSceneMode.Additive);

@@ -3,10 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
-using UnityEditor.Experimental.GraphView;
-using System.Runtime.InteropServices.WindowsRuntime;
-using UnityEditor;
-using System.Data;
 
 [RequireComponent(typeof(Rigidbody))]
 public class SubmarineMovement : MonoBehaviour

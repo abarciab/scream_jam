@@ -110,6 +110,10 @@ public class SharkController : MonoBehaviour
             GoToCurrentTarget();
             return;
         }
+        if (enemyScript.alert && !enemyScript.aggro) {
+            LookAtPlayer();
+            return;
+        }
         else if (!enemyScript.aggro && !enemyScript.alert && !patrolling) StartPatrol();
 
         attackCooldown -= Time.deltaTime;
@@ -117,6 +121,13 @@ public class SharkController : MonoBehaviour
         else if (patrolling) GoToNextPoint();
 
         GoToCurrentTarget();
+    }
+
+    void LookAtPlayer()
+    {
+        var startRot = transform.rotation;
+        transform.LookAt(player.transform);
+        transform.rotation = Quaternion.Lerp(startRot, transform.rotation, turnSmoothness);
     }
 
     void ChasePlayer()
@@ -139,9 +150,6 @@ public class SharkController : MonoBehaviour
             startedBiteAnim = true;
             anim.SetTrigger(biteTrigger);
         } 
-        
-        
-
 
         if (charging && player.enemiesInContact.Contains(transform)) AttackfromFront();
     }
@@ -163,7 +171,7 @@ public class SharkController : MonoBehaviour
 
     void CompleteAttack()
     {
-        enemyScript.EnterCalm();
+        enemyScript.EnterPostAttackCalm();
         aggro = false;
         PickNewAttack();
     }
@@ -232,7 +240,7 @@ public class SharkController : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, currentTarget);
-        Handles.Label(transform.position, (Mathf.Round(Vector3.Distance(transform.position, currentTarget) * 100)/100).ToString());
+        //Handles.Label(transform.position, (Mathf.Round(Vector3.Distance(transform.position, currentTarget) * 100)/100).ToString());
         
         if (!debugPoints) return;
         if (!Application.isPlaying && patrolPointParent && patrolPointParent.childCount != patrolPoints.Count) Init();

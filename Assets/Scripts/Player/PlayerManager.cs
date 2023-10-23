@@ -18,6 +18,7 @@ public class PlayerManager : MonoBehaviour
     [HideInInspector] public Player player;
     public Transform steerCam;
 
+
     [Header("CameraShake")]
     [SerializeField] List<CinemachineVirtualCamera> cameras = new List<CinemachineVirtualCamera>();
     [SerializeField] float maxAmplitude;
@@ -40,12 +41,28 @@ public class PlayerManager : MonoBehaviour
     [HideInInspector] public bool currentlySteering, lookingAtRadar;
     public bool throttleEnabled;
 
+    [Header("Oxygen")]
+    public bool oxygenOn;
+    [SerializeField] Sound oxygenSound;
+    [SerializeField] Transform oxygenSwitch;
+    [SerializeField] float oxygenDecayRate = 0.01f, oxygenMax = 100, oxygenReplenishRate, oxygenWarningThreshold = 0.1f, oxygenAmount = 50, oxygenPumpEngageThreshold = 75;
+    bool pumpingToFull;
+    public int oxygenPercent { get { return Mathf.RoundToInt((oxygenAmount / oxygenMax) * 100); } }
+    public bool lowOxygen { get { return (oxygenPercent / 100.0f) < oxygenWarningThreshold; } }
+
     [Header("Sound")]
     [SerializeField, Range(0, 1)] float throttleMod;
 
-    public void GetNoisePecent()
+    public float GetNoisePecent()
     {
-        float throttleMod = Mathf.Abs(moveScript.currentThrottle);
+        float noise = Mathf.Abs(moveScript.currentThrottle) * 0.7f;
+        noise += engineOn ? 0.15f : 0;
+        noise += oxygenOn ? 0.15f : 0;
+        return noise;
+    }
+    public void ToggleOxygen(bool active)
+    {
+        oxygenOn = active;
     }
 
     public void UpdateEngineFailRange(Vector2 newRange)
@@ -58,6 +75,7 @@ public class PlayerManager : MonoBehaviour
         moveScript = submarine.GetComponent<SubmarineMovement>();
         engineSound = Instantiate(engineSound);
         engineFailSound = Instantiate(engineFailSound);
+        oxygenSound = Instantiate(oxygenSound);
         engineSound.PlaySilent();
         failCooldown = Random.Range(waitTimeRange.x, waitTimeRange.y);
     }
@@ -66,6 +84,42 @@ public class PlayerManager : MonoBehaviour
     {
         if (engineOn) failCooldown -= Time.deltaTime;
         if (failCooldown <= 0) FailEngine();
+
+        DoOxygen();
+        
+    }
+
+    void DoOxygen()
+    {
+        if (Time.timeScale == 0) {
+            oxygenSound.Stop();
+            return;
+        }
+
+        oxygenAmount -= oxygenDecayRate * Time.deltaTime;
+        oxygenAmount = Mathf.Max(0, oxygenAmount);
+        if (oxygenAmount <= 0) {
+            player.Die();
+        }
+
+        bool canPump = oxygenOn && engineOn;
+        bool shouldPump = oxygenAmount < oxygenMax && (pumpingToFull || oxygenAmount < oxygenPumpEngageThreshold);
+        if ( canPump && shouldPump) {
+            PumpOxygen();
+        }
+        else {
+            pumpingToFull = false;
+            oxygenSound.Stop();
+        }
+    }
+
+    void PumpOxygen()
+    {
+        pumpingToFull = true;
+        oxygenAmount += oxygenReplenishRate * Time.deltaTime;
+        if (oxygenAmount >= oxygenMax) pumpingToFull = false;
+        oxygenAmount = Mathf.Min(oxygenMax, oxygenAmount);
+        oxygenSound.Play(oxygenSwitch, false);
     }
 
     public void FailEngine()

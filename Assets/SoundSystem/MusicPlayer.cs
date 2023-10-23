@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Search;
 using UnityEngine;
 
 public class MusicPlayer : MonoBehaviour
@@ -8,7 +9,7 @@ public class MusicPlayer : MonoBehaviour
     [SerializeField] List<Sound> tracks = new List<Sound>();
     float timeLeft, waitTime;
     [SerializeField] Vector2 silenceWaitRange = new Vector2(1, 10);
-    [SerializeField] Sound ambient, pauseMusic;
+    [SerializeField] Sound pauseMusic;
     Sound currentMusic;
     int currentIndex;
 
@@ -18,16 +19,28 @@ public class MusicPlayer : MonoBehaviour
 
     [Header("Alert")]
     [SerializeField] Sound alertHeartbeat; 
-    [SerializeField] float alertVolPercent; 
+    [SerializeField] float alertVolPercent;
+
+    [Header("Ambience")]
+    [SerializeField] Sound ambientLoop;
+    [SerializeField] List<Sound> ambientSounds = new List<Sound>();
+    [SerializeField] List<Vector2> ambientWaitTimeRanges = new List<Vector2>();
+    [SerializeField] List<Transform> ambientClipsTransforms = new List<Transform>();
+    [SerializeField] float ambientClipsDistance;
+    List<float> ambientClipCooldowns = new List<float>();
+
 
     private void Start()
     {
-        ambient = Instantiate(ambient);
+        ambientLoop = Instantiate(ambientLoop);
         pauseMusic = Instantiate(pauseMusic);
         alertHeartbeat = Instantiate(alertHeartbeat);
+        for (int i = 0; i < ambientSounds.Count; i++) {
+            ambientSounds[i] = Instantiate(ambientSounds[i]);
+        }
 
         pauseMusic.PlaySilent();
-        ambient.Play();
+        ambientLoop.Play();
         alertHeartbeat.PlaySilent();
 
         for (int i = 0; i < tracks.Count; i++) {
@@ -36,6 +49,10 @@ public class MusicPlayer : MonoBehaviour
         combatMusic = Instantiate(combatMusic);
         combatMusic.PlaySilent();
         StartNext();
+
+        for (int i = 0; i < ambientSounds.Count; i++) {
+            ambientClipCooldowns[i] = Random.Range(ambientWaitTimeRanges[i].x, ambientWaitTimeRanges[i].y);
+        }
     }
 
     public void FadeOutCurrent(float time)
@@ -66,6 +83,11 @@ public class MusicPlayer : MonoBehaviour
 
     private void Update()
     {
+        for (int i = 0; i < ambientSounds.Count; i++) {
+            ambientClipCooldowns[i] -= Time.deltaTime;
+            if (ambientClipCooldowns[i] <= 0) PlayAmbientClip(i);
+        }
+
         bool alert = EnvironmentManager.current.numAlertMonsters > 0;
         alertHeartbeat.PercentVolume(alert ? 1 : 0, 0.01f);
 
@@ -79,6 +101,13 @@ public class MusicPlayer : MonoBehaviour
         else {
             pauseMusic.PercentVolume(0, 0.1f);
         }
+    }
+
+    void PlayAmbientClip(int index)
+    {
+        ambientClipsTransforms[index].localPosition = Random.insideUnitSphere * ambientClipsDistance;
+        ambientSounds[index].Play(ambientClipsTransforms[index]);
+        ambientClipCooldowns[index] = Random.Range(ambientWaitTimeRanges[index].x, ambientWaitTimeRanges[index].y);
     }
 
     void PlayCombat()

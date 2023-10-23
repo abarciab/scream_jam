@@ -21,7 +21,10 @@ public class WindowUI : MonoBehaviour
     [SerializeField, Range(0, 1)] float noise1Threshold, noise2Threshold, noise3Threshold;
     [SerializeField] TextMeshProUGUI noiseText;
     [SerializeField] string noise0string, noise1string, noise2string, noise3string;
-    [SerializeField, Range(0, 1)] float testNoise;
+
+    [Header("Oxygen")]
+    [SerializeField] GameObject oxygenParent;
+    [SerializeField] TextMeshProUGUI oxygenText;
 
     private void Update()
     {
@@ -46,9 +49,22 @@ public class WindowUI : MonoBehaviour
 
         upArrow.rotation = Quaternion.identity;
 
-        if (testNoise > noise3Threshold) DisplayNoise(3);
-        else if (testNoise > noise2Threshold) DisplayNoise(2);
-        else if (testNoise > noise1Threshold) DisplayNoise(1);
+        UpdateNoiseGraphic();
+        ShowOxygen();
+    }
+
+    void ShowOxygen()
+    {
+        oxygenParent.SetActive(PlayerManager.i.lowOxygen);
+        oxygenText.text = "oxygen: " + PlayerManager.i.oxygenPercent + "%";
+    }
+
+    void UpdateNoiseGraphic()
+    {
+        float noise = PlayerManager.i.GetNoisePecent();
+        if (noise > noise3Threshold) DisplayNoise(3);
+        else if (noise > noise2Threshold) DisplayNoise(2);
+        else if (noise > noise1Threshold) DisplayNoise(1);
         else DisplayNoise(0);
     }
 

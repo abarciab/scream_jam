@@ -66,7 +66,7 @@ public class EnvironmentManager : MonoBehaviour
 
     public Vector3 GetNextRuinPos()
     {
-        var ruinPos = ruins.Count > 0 ? ruins[0].transform.position : Vector3.zero;
+        var ruinPos = ruins.Count > 0 ? ruins[0].GetPosition() : Vector3.zero;
         if (intermediateWaypoints.Count <= 0) return ruinPos;
 
         float lowestIndex = Mathf.Infinity;

@@ -1,5 +1,7 @@
+using MyBox;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -14,9 +16,9 @@ public class Sound : ScriptableObject
         public AudioClip clip;
         public bool looping;
         public bool CustomPitchAndVolume;
-        [ConditionalHide(nameof(CustomPitchAndVolume)), Range(0, 1)]
+        [ConditionalHide(nameof(CustomPitchAndVolume)), Range(0, 1), DefaultValue(1.0f)]
         public float volume = 1;
-        [ConditionalHide(nameof(CustomPitchAndVolume)), Range(0, 2)]
+        [ConditionalHide(nameof(CustomPitchAndVolume)), Range(0, 2), DefaultValue(1.0f)]
         public float pitch = 1;
 
         public Clip()
@@ -42,10 +44,13 @@ public class Sound : ScriptableObject
     [ConditionalHide(nameof(SynchronizePitchAndVolume)), Range(0, 2)]
     [SerializeField] float volume;
     float actualVolume;
-    [SerializeField] bool voiceLines;
+    [SerializeField, HideInInspector] bool voiceLines;
+
+    [SerializeField] bool randomizePitch;
+    [SerializeField, ConditionalField(nameof(randomizePitch)), Range(0, 1), Tooltip("randomizes by this much above and below selected pitch")] float pitchRandomizeAmount;
 
     [HideInInspector] public AudioSource audioSource;
-    public bool instantialized;
+    [HideInInspector]public bool instantialized;
     Vector3 sourcePos;
     bool setPos;
 
@@ -142,9 +147,12 @@ public class Sound : ScriptableObject
         if (setPos) audioSource.transform.localPosition = sourcePos;
         setPos = false;
 
+        float _pitch = clip.CustomPitchAndVolume ? clip.pitch : pitch;
+        if (randomizePitch) _pitch += Random.Range(-pitchRandomizeAmount, pitchRandomizeAmount);
+
         actualVolume = clip.CustomPitchAndVolume ? clip.volume : volume;
         audioSource.volume = silent ? 0 : actualVolume;
-        audioSource.pitch = clip.CustomPitchAndVolume ? clip.pitch : pitch;
+        audioSource.pitch = _pitch;
         audioSource.loop = clip.looping;
         audioSource.clip = clip.clip;
         audioSource.Play();
