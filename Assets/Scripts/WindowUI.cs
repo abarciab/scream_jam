@@ -15,6 +15,14 @@ public class WindowUI : MonoBehaviour
     [SerializeField] SubmarineMovement moveScript;
     [SerializeField] Transform upArrow;
 
+    [Header("noiseIndicator")]
+    [SerializeField] Image noiseImage;
+    [SerializeField] Sprite noise0, noise1, noise2, noise3;
+    [SerializeField, Range(0, 1)] float noise1Threshold, noise2Threshold, noise3Threshold;
+    [SerializeField] TextMeshProUGUI noiseText;
+    [SerializeField] string noise0string, noise1string, noise2string, noise3string;
+    [SerializeField, Range(0, 1)] float testNoise;
+
     private void Update()
     {
         bool engineOn = PlayerManager.i.engineOn;
@@ -36,6 +44,33 @@ public class WindowUI : MonoBehaviour
 
         throttleSlider.value = (moveScript.currentThrottle + 1) / 2;
 
-        upArrow.rotation = Quaternion.identity; 
+        upArrow.rotation = Quaternion.identity;
+
+        if (testNoise > noise3Threshold) DisplayNoise(3);
+        else if (testNoise > noise2Threshold) DisplayNoise(2);
+        else if (testNoise > noise1Threshold) DisplayNoise(1);
+        else DisplayNoise(0);
+    }
+
+    void DisplayNoise(int num)
+    {
+        switch (num) {
+            case 0:
+                noiseImage.sprite = noise0;
+                noiseText.text = noise0string;
+                break;
+            case 1:
+                noiseImage.sprite = noise1;
+                noiseText.text = noise1string;
+                break;
+            case 2:
+                noiseImage.sprite = noise2;
+                noiseText.text = noise2string;
+                break;
+            case 3:
+                noiseImage.sprite = noise3;
+                noiseText.text = noise3string;
+                break;
+        }
     }
 }

@@ -37,9 +37,13 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] Sound engineFailSound;
     [SerializeField] GameObject interiorLight, radarUI;
     float failCooldown;
-    [HideInInspector] public bool currentlySteering;
+    [HideInInspector] public bool currentlySteering, lookingAtRadar;
     public bool throttleEnabled;
 
+    public void GetNoisePecent()
+    {
+
+    }
 
     public void UpdateEngineFailRange(Vector2 newRange)
     {

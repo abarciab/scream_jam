@@ -10,7 +10,7 @@ public class Interactable : MonoBehaviour
 {
     [Tooltip("Lock the camera and change to vcam")]
     public bool doLockState;
-    [SerializeField] bool steeringCam;
+    [SerializeField] bool steeringCam, radarCam;
 
 
     [ConditionalField(nameof(doLockState))]
@@ -80,6 +80,7 @@ public class Interactable : MonoBehaviour
 
         activated = !activated;
         if (steeringCam) PlayerManager.i.currentlySteering = activated;
+        if (radarCam) PlayerManager.i.lookingAtRadar = activated;
 
         if (activated && dontHoverWhenActive) {
             ChangeColor(normalMat);
@@ -103,6 +104,7 @@ public class Interactable : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (steeringCam) PlayerManager.i.currentlySteering = false;
+            if (radarCam) PlayerManager.i.lookingAtRadar = false;
             ExitLockState();
         }
     }

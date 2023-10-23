@@ -22,10 +22,16 @@ public class GameManager : MonoBehaviour
     {
         if (startWithCheckpoint) {
             PlayerManager.i.UpdateEngineFailRange(startingFailRate);
-            PlayerManager.i.submarine.transform.position = checkPoints[currentCheckpoint].position;
-            PlayerManager.i.submarine.transform.rotation = checkPoints[currentCheckpoint].rotation;
+            JumpToCheckpoint();
         }
         LockCursor(true);
+    }
+
+    void JumpToCheckpoint()
+    {
+        PlayerManager.i.submarine.transform.position = checkPoints[currentCheckpoint].position;
+        PlayerManager.i.submarine.transform.rotation = checkPoints[currentCheckpoint].rotation;
+        print("loaded checkpoint " + currentCheckpoint);
     }
 
     public void LockCursor(bool _lock)
@@ -46,5 +52,17 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1;
         AudioManager.instance.Resume();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.UpArrow)) {
+            if (currentCheckpoint < checkPoints.Count) currentCheckpoint += 1;
+            JumpToCheckpoint();
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow)) {
+            if (currentCheckpoint > 0) currentCheckpoint -= 1;
+            JumpToCheckpoint();
+        }
     }
 }

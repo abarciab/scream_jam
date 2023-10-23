@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class IntermediateWaypoint : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public int ruinId;
+
+    private void Start()
     {
-        
+        EnvironmentManager.current.intermediateWaypoints.Add(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.GetComponent<Player>() != null) {
+            EnvironmentManager.current.intermediateWaypoints.Remove(this);
+            Destroy(gameObject);
+        }
     }
 }

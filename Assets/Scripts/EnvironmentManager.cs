@@ -10,6 +10,9 @@ public class EnvironmentManager : MonoBehaviour
     private void Awake() { current = this; }
 
     List<Ruin> ruins = new List<Ruin>();
+    [HideInInspector] public List<IntermediateWaypoint> intermediateWaypoints = new List<IntermediateWaypoint>();
+    int currentNextRuin;
+
     [HideInInspector]public List<Transform> monsters = new List<Transform>();
     public bool nextRuinAvaliable { get { return ruins.Count > 0; } }
     public bool inCombat { get { return NumAggroMonsters() > 0; } }
@@ -58,11 +61,25 @@ public class EnvironmentManager : MonoBehaviour
     public void RemoveRuin(Ruin completedRuin)
     {
         ruins.Remove(completedRuin);
+        currentNextRuin += 1;
     }
 
     public Vector3 GetNextRuinPos()
     {
-        return ruins.Count > 0 ? ruins[0].transform.position : Vector3.zero;
+        var ruinPos = ruins.Count > 0 ? ruins[0].transform.position : Vector3.zero;
+        if (intermediateWaypoints.Count <= 0) return ruinPos;
+
+        float lowestIndex = Mathf.Infinity;
+        IntermediateWaypoint bestPoint = null;
+        foreach (var wp in intermediateWaypoints) {
+            var si = wp.transform.GetSiblingIndex();
+            if (wp.ruinId == currentNextRuin && si < lowestIndex) {
+                lowestIndex = si;
+                bestPoint = wp;   
+            }
+        }
+
+        return bestPoint == null ? ruinPos : bestPoint.transform.position;
     }
 
     public string getNextRuinName()

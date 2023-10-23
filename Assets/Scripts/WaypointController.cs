@@ -10,7 +10,7 @@ public class WaypointController : MonoBehaviour
     [SerializeField] Transform nextRuinWaypoint;
     [SerializeField] Vector2 wayPointAnchoredPositionLimits;
 
-    Vector3 nextRuin;
+    Vector3 nextRuinPos;
     EnvironmentManager eMan;
     Transform player;
     [HideInInspector] public bool hideNextRuin;
@@ -45,9 +45,9 @@ public class WaypointController : MonoBehaviour
 
     private void Update()
     {
-        nextRuin = eMan.GetNextRuinPos();
+        nextRuinPos = Vector3.Lerp(nextRuinPos, eMan.GetNextRuinPos(), 0.02f);
 
-        var dist = Vector3.Distance(player.position, nextRuin);
+        var dist = Vector3.Distance(player.position, nextRuinPos);
         if (dist < alwaysDisplayRange) DisplayNextRuin(true);
 
         HideWaypoints();
@@ -73,8 +73,8 @@ public class WaypointController : MonoBehaviour
         var rt = nextRuinWaypoint.GetComponent<RectTransform>();
         var oldPos = rt.anchoredPosition;
 
-        nextRuinWaypoint.position = Camera.main.WorldToScreenPoint(nextRuin);
-        bool facingNextRuin = GetAngleToObject(nextRuin) > 0;
+        nextRuinWaypoint.position = Camera.main.WorldToScreenPoint(nextRuinPos);
+        bool facingNextRuin = GetAngleToObject(nextRuinPos) > 0;
 
         if (!facingNextRuin) DisplayOffScreenWaypoint(rt, oldPos);
         else {

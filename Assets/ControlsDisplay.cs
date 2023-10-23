@@ -4,19 +4,30 @@ using UnityEngine;
 
 public class ControlsDisplay : MonoBehaviour
 {
-    [SerializeField] Animator steeringControls;
-    bool exiting;
+    [SerializeField] Animator steeringControls, tab;
+    bool hidingSteeringControls, hidingTab;
 
     private void Update()
     {
+        bool showTab = PlayerManager.i.currentlySteering || PlayerManager.i.lookingAtRadar;
+
+        if (showTab) {
+            tab.gameObject.SetActive(true);
+            hidingTab = false;
+        }
+        else if (!hidingTab) {
+            hidingTab = true;
+            tab.SetTrigger("exit");
+        }
+
 
         if (PlayerManager.i.currentlySteering && PlayerManager.i.throttleEnabled) {
-            exiting = false;
+            hidingSteeringControls = false;
             steeringControls.gameObject.SetActive(true);
         }
-        else if (!exiting) {
+        else if (!hidingSteeringControls) {
             steeringControls.SetTrigger("exit");
-            exiting = true;
+            hidingSteeringControls = true;
         }
     }
 }
