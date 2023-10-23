@@ -40,8 +40,12 @@ public class PlayerManager : MonoBehaviour
     [HideInInspector] public bool currentlySteering, lookingAtRadar;
     public bool throttleEnabled;
 
+    [Header("Sound")]
+    [SerializeField, Range(0, 1)] float throttleMod;
+
     public void GetNoisePecent()
     {
+        float throttleMod = Mathf.Abs(moveScript.currentThrottle);
 
     }
 
