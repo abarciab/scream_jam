@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class WaypointController : MonoBehaviour
@@ -9,31 +10,48 @@ public class WaypointController : MonoBehaviour
     [SerializeField] Transform nextRuinWaypoint;
     [SerializeField] Vector2 wayPointAnchoredPositionLimits;
 
-    Vector3 nextRuin;
+    Vector3 nextRuinPos;
     EnvironmentManager eMan;
     Transform player;
     [HideInInspector] public bool hideNextRuin;
+
+    [Space()]
+    [SerializeField] float ringDelay = 0.5f;
+    [SerializeField] Sound newWaypointSound, wayPointAppearSound;
+    [SerializeField] GameObject newWaypoint, ring;
+    bool setRing;
+    float ringCooldown;
 
     public void SetWaypointMode(bool active)
     {
         displayWaypoints = active;
     }
 
+    public void ShowRuin()
+    {
+        displayWaypoints = true;
+        newWaypoint.SetActive(true);
+        newWaypointSound.Play();
+        setRing = true;
+        ringCooldown = ringDelay;
+    }
     private void Start()
     {
         eMan = EnvironmentManager.current;
         player = Camera.main.transform;
+        newWaypointSound = Instantiate(newWaypointSound);
+        wayPointAppearSound = Instantiate(wayPointAppearSound);
     }
 
     private void Update()
     {
-        nextRuin = eMan.GetNextRuinPos();
+        nextRuinPos = Vector3.Lerp(nextRuinPos, eMan.GetNextRuinPos(), 0.02f);
 
-        var dist = Vector3.Distance(player.position, nextRuin);
+        var dist = Vector3.Distance(player.position, nextRuinPos);
         if (dist < alwaysDisplayRange) DisplayNextRuin(true);
 
         HideWaypoints();
-        if (displayWaypoints) DisplayWaypoints();
+        if (displayWaypoints && PlayerManager.i.engineOn) DisplayWaypoints();
     }
 
     void HideWaypoints()
@@ -51,15 +69,26 @@ public class WaypointController : MonoBehaviour
         if (hideNextRuin || !EnvironmentManager.current.nextRuinAvaliable) return;
 
         nextRuinWaypoint.gameObject.SetActive(true);
+        nextRuinWaypoint.GetComponentInChildren<TextMeshProUGUI>().text = eMan.getNextRuinName();
         var rt = nextRuinWaypoint.GetComponent<RectTransform>();
         var oldPos = rt.anchoredPosition;
 
-        nextRuinWaypoint.transform.position = Camera.main.WorldToScreenPoint(nextRuin);
-        bool facingNextRuin = GetAngleToObject(nextRuin) > 0;
+        nextRuinWaypoint.position = Camera.main.WorldToScreenPoint(nextRuinPos);
+        bool facingNextRuin = GetAngleToObject(nextRuinPos) > 0;
 
         if (!facingNextRuin) DisplayOffScreenWaypoint(rt, oldPos);
         else {
             ClampWaypointToLimits(rt);
+        }
+
+        if(setRing && nextRuinWaypoint.gameObject.activeInHierarchy) {
+            ringCooldown -= Time.deltaTime;
+            if (ringCooldown > 0) return;
+
+            setRing = false;
+            ring.transform.position = nextRuinWaypoint.position;
+            ring.SetActive(true);
+            wayPointAppearSound.Play();
         }
     }
 

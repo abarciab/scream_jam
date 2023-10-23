@@ -16,6 +16,8 @@ public class Ruin : MonoBehaviour
         gameObject.name = displayName + " (ruin " + num + ")";
     }
 
+    public string GetName() { return displayName; }
+
     void Start()
     {
         EnvironmentManager.current.RegisterNewRuin(this);

@@ -12,10 +12,9 @@ public class PlayerCameraController : MonoBehaviour
     public bool locked { get { return _locked; } }
 
     [SerializeField] Vector2 freeLookLimits;
-
-    [MyBox.ReadOnly]
-    [SerializeField]
+    [SerializeField] bool limitCam;
     bool _locked;
+    [SerializeField] float delay = 1.5f;
 
     public void LockCamera()
     {
@@ -30,6 +29,10 @@ public class PlayerCameraController : MonoBehaviour
     void LateUpdate()
     {
         if (_locked) return;
+        if (delay > 0) {
+            delay -= Time.deltaTime;
+            return;
+        }
 
         float deltaY = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float deltaX = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
@@ -38,7 +41,7 @@ public class PlayerCameraController : MonoBehaviour
         var targetDelta = Quaternion.Euler(deltaEuler);
         transform.rotation *= targetDelta;
 
-
+        if (!limitCam) return;
         var eulers = transform.localEulerAngles;
         if (eulers.y > 180) eulers.y -= 360;
         if (eulers.x > 180) eulers.x -= 360;

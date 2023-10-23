@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -36,6 +37,22 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] Sound engineFailSound;
     [SerializeField] GameObject interiorLight, radarUI;
     float failCooldown;
+    [HideInInspector] public bool currentlySteering, lookingAtRadar;
+    public bool throttleEnabled;
+
+    [Header("Sound")]
+    [SerializeField, Range(0, 1)] float throttleMod;
+
+    public void GetNoisePecent()
+    {
+        float throttleMod = Mathf.Abs(moveScript.currentThrottle);
+
+    }
+
+    public void UpdateEngineFailRange(Vector2 newRange)
+    {
+        waitTimeRange = newRange;
+    }
 
     private void Start()
     {

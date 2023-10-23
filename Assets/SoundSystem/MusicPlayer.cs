@@ -8,7 +8,7 @@ public class MusicPlayer : MonoBehaviour
     [SerializeField] List<Sound> tracks = new List<Sound>();
     float timeLeft, waitTime;
     [SerializeField] Vector2 silenceWaitRange = new Vector2(1, 10);
-    [SerializeField] Sound ambient;
+    [SerializeField] Sound ambient, pauseMusic;
     Sound currentMusic;
     int currentIndex;
 
@@ -23,7 +23,10 @@ public class MusicPlayer : MonoBehaviour
     private void Start()
     {
         ambient = Instantiate(ambient);
+        pauseMusic = Instantiate(pauseMusic);
         alertHeartbeat = Instantiate(alertHeartbeat);
+
+        pauseMusic.PlaySilent();
         ambient.Play();
         alertHeartbeat.PlaySilent();
 
@@ -69,6 +72,13 @@ public class MusicPlayer : MonoBehaviour
         inCombat = EnvironmentManager.current.inCombat;
         if (inCombat) PlayCombat();
         else PlayNormal(alert);
+
+        if (Time.timeScale == 0) {
+            pauseMusic.PercentVolume(1, 0.05f);
+        }
+        else {
+            pauseMusic.PercentVolume(0, 0.1f);
+        }
     }
 
     void PlayCombat()
