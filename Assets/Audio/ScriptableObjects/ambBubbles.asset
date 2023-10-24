@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93e0513045be1974d934eb6431407da8, type: 3}
+  m_Name: ambBubbles
+  m_EditorClassIdentifier: 
+  clips:
+  - name: ambBubbles01
+    clip: {fileID: 8300000, guid: 1a299df6eedd07049904f6ff0800a63a, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambBubbles02
+    clip: {fileID: 8300000, guid: 69b2de812edd9a7469d450d5c38dfc5c, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambBubbles03
+    clip: {fileID: 8300000, guid: aabc47422d2a31944a99b58a651c332d, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambBubbles04
+    clip: {fileID: 8300000, guid: 2e0aba7425419214cbd6fc0d3c3733d6, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambBubbles05
+    clip: {fileID: 8300000, guid: b11e8d31df421364a9890073dcbf0254, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambBubbles06
+    clip: {fileID: 8300000, guid: 1d95396345a2a694f9290b37d6b64b5f, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: ambBubbles07
+    clip: {fileID: 8300000, guid: c812d2f0dbe37b9419885815ebf4920a, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  type: 0
+  SynchronizePitchAndVolume: 1
+  pitch: 1
+  volume: 0.149
+  voiceLines: 0
+  randomizePitch: 1
+  pitchRandomizeAmount: 0.069
+  audioSource: {fileID: 0}
+  instantialized: 0

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: smallSwitch
   m_EditorClassIdentifier: 
   clips:
-  - name: 
-    clip: {fileID: 8300000, guid: f9d78ed24e24b6f4aa98b51d27b71ae3, type: 3}
+  - name: headlightSwitch
+    clip: {fileID: 8300000, guid: bfb7c7c89bce7a44eb07d26d5f0dbf59, type: 3}
     looping: 0
     CustomPitchAndVolume: 0
     volume: 0
@@ -24,5 +24,7 @@ MonoBehaviour:
   pitch: 0.644
   volume: 0.401
   voiceLines: 0
+  randomizePitch: 0
+  pitchRandomizeAmount: 0
   audioSource: {fileID: 0}
   instantialized: 0

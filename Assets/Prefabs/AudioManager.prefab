@@ -85,8 +85,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f593cf22a3bcffb40bfa7d1c09089b8d, type: 2}
   - {fileID: 11400000, guid: 49269f87f3a24b140be3861e812e54cb, type: 2}
   - {fileID: 11400000, guid: 65cd51aac4f98dd49a902ef1d1392312, type: 2}
+  - {fileID: 11400000, guid: 4a6bd0ee654c9f9449ea78a65e8e50c8, type: 2}
   ambientWaitTimeRanges:
   - {x: 30, y: 120}
   - {x: 40, y: 360}
   - {x: 30, y: 90}
+  - {x: 15, y: 30}
   ambientClipsDistance: 5

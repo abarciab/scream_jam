@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: eelRumble
   m_EditorClassIdentifier: 
   clips:
-  - name: 
-    clip: {fileID: 8300000, guid: ff53ff779cd90aa4f90f0c1d7d98ebee, type: 3}
+  - name: eelRumble01
+    clip: {fileID: 8300000, guid: e89f6b8ebe77b6c47920dc3ceaf84b6d, type: 3}
     looping: 1
     CustomPitchAndVolume: 0
     volume: 0
@@ -24,5 +24,7 @@ MonoBehaviour:
   pitch: 1
   volume: 0.515
   voiceLines: 0
+  randomizePitch: 0
+  pitchRandomizeAmount: 0
   audioSource: {fileID: 0}
   instantialized: 0

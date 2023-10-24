@@ -13,8 +13,20 @@ MonoBehaviour:
   m_Name: eelBigScream
   m_EditorClassIdentifier: 
   clips:
-  - name: 
-    clip: {fileID: 8300000, guid: d92a7e73349ecc746809af369d554ef9, type: 3}
+  - name: eelScream01
+    clip: {fileID: 8300000, guid: b40b40a54641081489c08108dbf43c41, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: eelScream02
+    clip: {fileID: 8300000, guid: c9402fc7479d9a84c8dcb2a9f7655e55, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: eelScream03
+    clip: {fileID: 8300000, guid: 149d6f67fced94c45bf41cc112be4a69, type: 3}
     looping: 0
     CustomPitchAndVolume: 0
     volume: 0
@@ -24,5 +36,7 @@ MonoBehaviour:
   pitch: 1
   volume: 1
   voiceLines: 0
+  randomizePitch: 0
+  pitchRandomizeAmount: 0
   audioSource: {fileID: 0}
   instantialized: 0
